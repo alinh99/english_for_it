@@ -71,11 +71,11 @@ class _SplashScreenState extends State<SplashScreen>
     _loadData();
   }
 
-  // @override
-  // void dispose() {
-  //   _controller.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   Future _loadData() async {
     await Future.delayed(
@@ -94,9 +94,9 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     windowHeight = MediaQuery.of(context).size.height;
     windowWidth = MediaQuery.of(context).size.width;
-    // _loginHeight = windowHeight - 270;
-    // _registerHeight = windowHeight - 270;
-    // _infoHeight = windowHeight - 270;
+    _loginHeight = windowHeight - 270;
+    _registerHeight = windowHeight - 270;
+    _infoHeight = windowHeight - 270;
     switch (_pageState) {
       case 0:
         _backgroundColor = Colors.white;
@@ -157,19 +157,20 @@ class _SplashScreenState extends State<SplashScreen>
         break;
     }
 
-    // if (_loadingInProgress == true) {
-    //   return Center(
-    //     child: SpinKitCubeGrid(
-    //       color: kBackgroundColor,
-    //       size: 50.0,
-    //       controller: _controller,
-    //     ),
-    //   );
-    // } else {
-    //   Future.delayed(
-    //     Duration.zero,
-    //     () => showSuccessfulDialog(),
-    //   );
+    if (_loadingInProgress == true) {
+      return Center(
+        child: SpinKitCubeGrid(
+          color: kBackgroundColor,
+          size: 50.0,
+          controller: _controller,
+        ),
+      );
+    } else {
+      Future.delayed(
+        Duration.zero,
+        () => showSuccessfulDialog(),
+      );
+    }
     return Stack(
       children: [
         AnimatedContainer(
@@ -287,7 +288,7 @@ class _SplashScreenState extends State<SplashScreen>
               //     ),
               //   ],
               // ),
-              child: ColBackgroundLoginAndRegister(
+              child: colBackgroundLoginAndRegister(
                 "Login to Continue",
                 "Enter your email",
                 "Enter your password",
@@ -374,7 +375,7 @@ class _SplashScreenState extends State<SplashScreen>
           //     ),
           //   ],
           // ),
-          child: ColBackgroundLoginAndRegister(
+          child: colBackgroundLoginAndRegister(
             "Create a New Account",
             "Enter your email",
             "Enter your password",
@@ -401,7 +402,7 @@ class _SplashScreenState extends State<SplashScreen>
               topRight: Radius.circular(25),
             ),
           ),
-          child: ColBackgroundLoginAndRegister(
+          child: colBackgroundLoginAndRegister(
             "Profile",
             "Enter your full name",
             "Enter your Age",
@@ -417,7 +418,7 @@ class _SplashScreenState extends State<SplashScreen>
     // }
   }
 
-  Column ColBackgroundLoginAndRegister(
+  Column colBackgroundLoginAndRegister(
     String header,
     String emailHint,
     String passwordHint,

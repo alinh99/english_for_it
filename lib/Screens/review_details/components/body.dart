@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/review_details/components/reuseable_card.dart';
-import 'package:flutter_eft/Screens/review_details/quizz_page/quizz.dart';
+import 'package:flutter_eft/Screens/review_details/quizz_page/quizz_screen.dart';
 import '../../../constants.dart';
 import '../../home/components/style.dart';
 
@@ -102,7 +102,7 @@ class Body extends StatelessWidget {
                                 settings: const RouteSettings(
                                     name: '/quizz_screen'),
                                 builder: (BuildContext context) {
-                                  return const Quizz();
+                                  return const QuizzScreen();
                                 },
                               ),
                             );

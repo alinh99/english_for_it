@@ -3,24 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/profile/edit_profile/edit_profile_screen.dart';
 import 'package:flutter_eft/Screens/splash/splash_screen.dart';
 import 'package:flutter_eft/constants.dart';
+import 'package:flutter_eft/screens/profile/services/auth.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
 
-class Body extends StatelessWidget {
-  const Body({
-    Key key,
-    @required this.size,
-  }) : super(key: key);
-
+class Body extends StatefulWidget {
+  const Body({Key key, @required this.size}) : super(key: key);
   final Size size;
+  @override
+  _BodyState createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  // final user = FirebaseAuth.instance.currentUser;
+  // user.
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.topCenter,
       children: [
         Container(
-          height: size.height - (size.height / 5),
-          width: size.width,
+          height: widget.size.height - (widget.size.height / 5),
+          width: widget.size.width,
           decoration: const BoxDecoration(
             color: kBackgroundColor,
           ),
@@ -53,6 +58,12 @@ class Body extends StatelessWidget {
                           ),
                           alignment: Alignment.center,
                         ),
+                        // Align(
+                        //   child: Expanded(
+                        //     child: Text(user.displayName),
+                        //   ),
+                        //   alignment: Alignment.center,
+                        // ),
                       ],
                     ),
                   ),
@@ -65,8 +76,8 @@ class Body extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-            height: size.height - (size.height / 2.5),
-            width: size.width,
+            height: widget.size.height - (widget.size.height / 2.5),
+            width: widget.size.width,
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
@@ -85,8 +96,8 @@ class Body extends StatelessWidget {
                       press: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            settings:
-                                const RouteSettings(name: '/edit_profile_screen'),
+                            settings: const RouteSettings(
+                                name: '/edit_profile_screen'),
                             builder: (BuildContext context) {
                               return const EditProfileScreen();
                             },
@@ -120,7 +131,8 @@ class Body extends StatelessWidget {
                     child: ProfileMenu(
                       text: "Log Out",
                       icon: Icons.logout,
-                      press: () {
+                      press: () async {
+                        AuthService().signOut();
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             settings:

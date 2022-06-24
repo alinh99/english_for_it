@@ -35,18 +35,10 @@ class _LongCourseCardState extends State<LongCourseCard>
         duration: const Duration(milliseconds: 2000), vsync: this);
 
     _controller.forward();
-    _controller.addStatusListener((status) {
-      // ignore: unrelated_type_equality_checks
-      if (AnimationStatus.completed == true) {
-        Navigator.pop(context);
-        _controller.reset();
-      }
-    });
 
     _loadData();
     _controller.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
-        Navigator.pop(context);
         _controller.reset();
       }
     });
@@ -54,7 +46,6 @@ class _LongCourseCardState extends State<LongCourseCard>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _controller.dispose();
   }
@@ -83,10 +74,6 @@ class _LongCourseCardState extends State<LongCourseCard>
         ),
       );
     } else {
-      Future.delayed(
-        Duration.zero,
-        () => showSuccessfulDialog(),
-      );
       return Container(
         height: 155,
         width: 192,
@@ -142,33 +129,4 @@ class _LongCourseCardState extends State<LongCourseCard>
       );
     }
   }
-
-  void showSuccessfulDialog() async => showDialog(
-        context: context,
-        builder: (context) => Dialog(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Lottie.asset("assets/images/transaction_success.json",
-                  repeat: false,
-                  height: 200,
-                  width: 200,
-                  controller: _controller, onLoaded: (composition) {
-                _controller.duration = composition.duration;
-                _controller.forward();
-              }),
-              const Center(
-                child: Text(
-                  "Done!",
-                  style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 21),
-            ],
-          ),
-        ),
-      );
 }

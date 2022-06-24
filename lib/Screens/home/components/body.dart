@@ -5,13 +5,14 @@ import 'package:flutter_eft/constants.dart';
 import 'package:flutter_eft/Screens/home/components/style.dart';
 import 'package:flutter_eft/Screens/home/components/long_course_card.dart';
 
-class Body extends StatelessWidget {
-  const Body({
-    Key key,
-    @required this.size,
-  }) : super(key: key);
-
+class Body extends StatefulWidget {
+  const Body({Key key, @required this.size}) : super(key: key);
   final Size size;
+  @override
+  _BodyState createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +21,8 @@ class Body extends StatelessWidget {
         Align(
           alignment: Alignment.topCenter,
           child: Container(
-            height: size.height - (size.height / 4),
-            width: size.width,
+            height: widget.size.height - (widget.size.height / 4),
+            width: widget.size.width,
             decoration: const BoxDecoration(
               color: kBackgroundColor,
             ),
@@ -60,8 +61,8 @@ class Body extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            height: size.height - (size.height / 3),
-            width: size.width,
+            height: widget.size.height - (widget.size.height / 3),
+            width: widget.size.width,
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(

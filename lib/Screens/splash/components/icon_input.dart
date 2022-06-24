@@ -6,12 +6,21 @@ class IconInput extends StatefulWidget {
   final String inputHintText;
   final TextEditingController editingController;
   final bool checkPassword;
+  final dynamic formKey;
+  final bool isEmail;
+  final bool isName;
+  final bool isAge;
+
   const IconInput(
       {Key key,
       this.icon,
       this.inputHintText,
       this.editingController,
-      this.checkPassword})
+      this.checkPassword,
+      this.formKey,
+      this.isEmail,
+      this.isAge,
+      this.isName})
       : super(key: key);
   @override
   _IconInputState createState() => _IconInputState();
@@ -24,7 +33,7 @@ class _IconInputState extends State<IconInput> {
       decoration: BoxDecoration(
         border: Border.all(
           width: 2,
-          color: kBorderColor,
+          color: kBackgroundColor,
         ),
         borderRadius: BorderRadius.circular(50),
         color: kHintTextColor,
@@ -39,16 +48,42 @@ class _IconInputState extends State<IconInput> {
             width: 60,
           ),
           Expanded(
-            child: TextField(
-              onChanged: (text) => print(text),
-              controller: widget.editingController,
-              obscureText: widget.checkPassword ? true : false,
-              decoration: InputDecoration(
-                hintText: widget.inputHintText,
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 20,
+            child: Form(
+              key: widget.formKey,
+              child: TextFormField(
+                validator: (value) => widget.checkPassword == false &&
+                        value.isEmpty &&
+                        widget.isEmail == true
+                    ? 'Enter an email'
+                    : widget.checkPassword == true && value.length < 6
+                        ? 'Enter Password 6+ chars long'
+                        : widget.checkPassword == false &&
+                                value.isEmpty &&
+                                widget.isName == true
+                            ? 'Enter some character'
+                            : widget.checkPassword == false &&
+                                    value.isEmpty &&
+                                    widget.isAge == true
+                                ? 'Enter a number'
+                                : null,
+                onChanged: (text) {
+                  text = widget.editingController.text.trim();
+                },
+                controller: widget.editingController,
+                obscureText: widget.checkPassword ? true : false,
+                decoration: InputDecoration(
+                  hintText: widget.inputHintText,
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 20,
+                  ),
+                  border: InputBorder.none,
                 ),
-                border: InputBorder.none,
+                textCapitalization: TextCapitalization.sentences,
+                keyboardType: widget.isEmail
+                    ? TextInputType.emailAddress
+                    : widget.isAge
+                        ? TextInputType.number
+                        : TextInputType.text
               ),
             ),
           ),

@@ -1,20 +1,48 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/Screens/splash/components/loading.dart';
 import 'package:flutter_eft/constants.dart';
 import 'profile_pic.dart';
 
 class Body extends StatefulWidget {
-  const Body({
-    Key key,
-    @required this.size,
-  }) : super(key: key);
-
+  const Body({Key key, @required this.size, this.documentID}) : super(key: key);
   final Size size;
+  final String documentID;
+
   @override
   _BodyState createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
   bool showPassword = false;
+  bool loading = false;
+  @override
+  void initState() {
+    _getUserData();
+    super.initState();
+  }
+
+  String userName;
+  String userEmail;
+  String userPassword;
+  int userAge;
+
+  Future<void> _getUserData() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc((FirebaseAuth.instance.currentUser).uid)
+        .get()
+        .then((value) {
+      setState(() {
+        userName = value.data()['last_name'] + ' ' + value.data()['first_name'];
+        userEmail = value.data()['email'];
+        userPassword = value.data()['password'];
+        userAge = value.data()['age'];
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -87,31 +115,34 @@ class _BodyState extends State<Body> {
                       height: 35,
                     ),
                     Expanded(
-                      child: buildTextField("Full Name", "NHL", false),
+                      child: buildTextField('Full Name', userName, false),
                     ),
                     Expanded(
-                      child:
-                          buildTextField("Email", "alinh1803@gmail.com", false),
+                      child: buildTextField('Email', userEmail, false),
                     ),
                     Expanded(
-                      child: buildTextField("Password", "******", true),
+                      child: buildTextField('Password', userPassword, true),
                     ),
                     Expanded(
-                      child:
-                          buildTextField("Phone Number", "0912345678", false),
+                      child: buildTextField('Age', userAge.toString(), false),
                     ),
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            child: OutlineButton(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 50),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                primary: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 50),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                               child: const Text(
                                 "CANCEL",
                                 style: TextStyle(
@@ -160,6 +191,10 @@ class _BodyState extends State<Body> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35),
       child: TextField(
+        onChanged: (value) {
+          //Do something with the user input.
+          placeHolder = value;
+        },
         obscureText: isPasswordTextField ? showPassword : false,
         decoration: InputDecoration(
             hoverColor: kBackgroundColor,
@@ -192,4 +227,16 @@ class _BodyState extends State<Body> {
       ),
     );
   }
+
+  // List<Widget> getList() {
+  //   List<Users> userResults = [];
+  //   List<Widget> childs = userResults
+  //       .map((e) => Row(children: <Widget>[
+  //             Text(e.firstName, style: const TextStyle(fontSize: 25)),
+  //             Text(e.email, style: const TextStyle(fontSize: 25)),
+  //             Text(e.password, style: const TextStyle(fontSize: 25))
+  //           ]))
+  //       .toList();
+  //   return childs;
+  // }
 }

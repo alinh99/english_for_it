@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePic extends StatelessWidget {
-  const ProfilePic({Key key}) : super(key: key);
+  const ProfilePic({Key key, this.avatarUrl}) : super(key: key);
+  final String avatarUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +15,13 @@ class ProfilePic extends StatelessWidget {
         fit: StackFit.expand,
         clipBehavior: Clip.none,
         children: [
-          // const CircleAvatar(
-          //   backgroundImage: AssetImage("assets/images/Profile Image.jpg"),
-          // ),
+          avatarUrl == null
+              ? const CircleAvatar(
+                  backgroundColor: Colors.grey,
+                )
+              : CircleAvatar(
+                  backgroundImage: NetworkImage(avatarUrl),
+                ),
           Positioned(
             right: -16,
             bottom: 0,
@@ -31,7 +37,13 @@ class ProfilePic extends StatelessWidget {
                   primary: Colors.white,
                   backgroundColor: const Color(0xFFF5F6F9),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  final _imagePicker = ImagePicker();
+                  PickedFile image;
+                  image =
+                      await _imagePicker.getImage(source: ImageSource.gallery);
+                  print(image.path);
+                },
                 child: const Icon(
                   CupertinoIcons.camera,
                   color: Color(0xFF333333),

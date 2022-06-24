@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
-import '../../../constants.dart';
-import '../../home/components/colors.dart';
-import '../../home/components/long_course_card.dart';
-import '../../home/components/style.dart';
-import '../../review_details/review_details_screen.dart';
+import 'package:flutter_eft/Screens/home/components/colors.dart';
+import 'package:flutter_eft/Screens/home/components/long_course_card.dart';
+import 'package:flutter_eft/Screens/home/components/style.dart';
+import 'package:flutter_eft/Screens/review_details/review_details_screen.dart';
+import 'package:flutter_eft/constants.dart';
 
 class Body extends StatelessWidget {
   const Body({

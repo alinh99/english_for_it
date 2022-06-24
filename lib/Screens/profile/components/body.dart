@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/profile/edit_profile/edit_profile_screen.dart';
+import 'package:flutter_eft/Screens/services/auth.dart';
 import 'package:flutter_eft/Screens/splash/splash_screen.dart';
 import 'package:flutter_eft/constants.dart';
-import 'package:flutter_eft/screens/profile/services/auth.dart';
+
 import 'profile_menu.dart';
 import 'profile_pic.dart';
 
@@ -15,9 +17,8 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  // final user = FirebaseAuth.instance.currentUser;
-  // user.
-
+  //final Users _currentUser = locator.get<DatabaseService>().currentUser;
+  FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -52,9 +53,12 @@ class _BodyState extends State<Body> {
                     child: Column(
                       // ignore: prefer_const_literals_to_create_immutables
                       children: [
-                        const Align(
+                        Align(
                           child: Expanded(
-                            child: ProfilePic(),
+                            child: ProfilePic(
+                              avatarUrl: _auth.currentUser.photoURL,
+                              onTap: () {},
+                            ),
                           ),
                           alignment: Alignment.center,
                         ),

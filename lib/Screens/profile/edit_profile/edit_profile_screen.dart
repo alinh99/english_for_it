@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_eft/Screens/models/users.dart';
 import 'package:flutter_eft/Screens/services/auth.dart';
 import 'components/body.dart';
 import 'package:flutter_eft/components/custom_bottom_nav_bar.dart';

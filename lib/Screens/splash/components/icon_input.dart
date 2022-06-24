@@ -33,9 +33,9 @@ class _IconInputState extends State<IconInput> {
       decoration: BoxDecoration(
         border: Border.all(
           width: 2,
-          color: kBackgroundColor,
+          color: kBorderColor,
         ),
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(100.0),
         color: kHintTextColor,
       ),
       child: Row(
@@ -48,43 +48,48 @@ class _IconInputState extends State<IconInput> {
             width: 60,
           ),
           Expanded(
-            child: Form(
-              key: widget.formKey,
-              child: TextFormField(
-                validator: (value) => widget.checkPassword == false &&
-                        value.isEmpty &&
-                        widget.isEmail == true
-                    ? 'Enter an email'
-                    : widget.checkPassword == true && value.length < 6
-                        ? 'Enter Password 6+ chars long'
-                        : widget.checkPassword == false &&
-                                value.isEmpty &&
-                                widget.isName == true
-                            ? 'Enter some character'
-                            : widget.checkPassword == false &&
-                                    value.isEmpty &&
-                                    widget.isAge == true
-                                ? 'Enter a number'
-                                : null,
-                onChanged: (text) {
-                  text = widget.editingController.text.trim();
-                },
-                controller: widget.editingController,
-                obscureText: widget.checkPassword ? true : false,
-                decoration: InputDecoration(
-                  hintText: widget.inputHintText,
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 20,
-                  ),
-                  border: InputBorder.none,
+            child: Column(
+              children: [
+                Form(
+                  key: widget.formKey,
+                  child: TextFormField(
+                      //textAlign: TextAlign.center,
+                      validator: (value) => widget.checkPassword == false &&
+                              value.isEmpty &&
+                              widget.isEmail == true
+                          ? 'Enter an email'
+                          : widget.checkPassword == true && value.length < 6
+                              ? 'Enter Password 6+ chars long'
+                              : widget.checkPassword == false &&
+                                      value.isEmpty &&
+                                      widget.isName == true
+                                  ? 'Enter some character'
+                                  : widget.checkPassword == false &&
+                                          value.isEmpty &&
+                                          widget.isAge == true
+                                      ? 'Enter a number'
+                                      : null,
+                      onChanged: (text) {
+                        text = widget.editingController.text.trim();
+                      },
+                      cursorColor: Colors.black,
+                      controller: widget.editingController,
+                      obscureText: widget.checkPassword ? true : false,
+                      decoration: InputDecoration(
+                        hintText: widget.inputHintText,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                      textCapitalization: TextCapitalization.sentences,
+                      keyboardType: widget.isEmail
+                          ? TextInputType.emailAddress
+                          : widget.isAge
+                              ? TextInputType.number
+                              : TextInputType.text),
                 ),
-                textCapitalization: TextCapitalization.sentences,
-                keyboardType: widget.isEmail
-                    ? TextInputType.emailAddress
-                    : widget.isAge
-                        ? TextInputType.number
-                        : TextInputType.text
-              ),
+              ],
             ),
           ),
         ],

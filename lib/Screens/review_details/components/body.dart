@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/Screens/home/components/style.dart';
 import 'package:flutter_eft/Screens/review_details/components/reuseable_card.dart';
 import 'package:flutter_eft/Screens/review_details/quizz_page/quizz_screen.dart';
-import '../../../constants.dart';
-import '../../home/components/style.dart';
+import 'package:flutter_eft/constants.dart';
+
 
 class Body extends StatelessWidget {
   const Body({

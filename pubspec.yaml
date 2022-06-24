@@ -48,6 +48,7 @@ dependencies:
   stacked_services: ^0.8.26
   auth: ^8.1.0
   provider: ^6.0.3
+  file_picker: ^4.6.1
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ProfilePic extends StatelessWidget {
-  const ProfilePic({Key key}) : super(key: key);
+  const ProfilePic({Key key, this.avatarUrl, this.onTap}) : super(key: key);
+  final String avatarUrl;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,14 @@ class ProfilePic extends StatelessWidget {
         clipBehavior: Clip.none,
         // ignore: prefer_const_literals_to_create_immutables
         children: [
-          const CircleAvatar(),
+          avatarUrl == null
+              ? const CircleAvatar(
+                  backgroundColor: Colors.grey,
+                )
+              : CircleAvatar(
+                  radius: 50.0,
+                  backgroundImage: NetworkImage(avatarUrl),
+                ),
         ],
       ),
     );

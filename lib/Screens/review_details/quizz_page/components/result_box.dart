@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../../constants.dart';
+import 'package:flutter_eft/constants.dart';
 
 class ResultBox extends StatelessWidget {
   const ResultBox(

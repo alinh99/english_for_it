@@ -1,15 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/home/home_screen.dart';
 import 'package:flutter_eft/Screens/models/users.dart';
+import 'package:flutter_eft/Screens/services/auth.dart';
+import 'package:flutter_eft/Screens/splash/components/loading.dart';
 import 'package:flutter_eft/constants.dart';
 import 'package:flutter_eft/Screens/splash/components/heading.dart';
 import 'package:flutter_eft/Screens/splash/components/content.dart';
 import 'package:flutter_eft/Screens/splash/components/get_started_button.dart';
 import 'package:flutter_eft/Screens/splash/components/primary_button.dart';
 import 'package:flutter_eft/Screens/splash/components/icon_input.dart';
-import 'package:flutter_eft/screens/profile/services/auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
@@ -18,7 +20,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-import 'components/loading.dart';
 
 class SplashScreen extends StatefulWidget {
   static String splashPage = "splash_screen";
@@ -39,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen>
   final FirebaseAuth auth = FirebaseAuth.instance;
   AnimationController _controller;
   TextEditingController emailEditingController = TextEditingController();
-
+  PlatformFile pickedFile;
   TextEditingController passwordEditingController = TextEditingController();
   TextEditingController firstNameEditingController = TextEditingController();
   TextEditingController lastNameEditingController = TextEditingController();
@@ -566,12 +567,6 @@ class _SplashScreenState extends State<SplashScreen>
                       _pageState = 4;
                     });
                     return userName;
-
-                    // if (userName != null) {
-                    //   setState(() {
-                    //
-                    //   });
-                    // }
                   } catch (e) {
                     print(e);
                   }
@@ -660,11 +655,7 @@ class _SplashScreenState extends State<SplashScreen>
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      uploadImage();
-                    });
-                  },
+                  onTap: () async {},
                   child: const Center(
                     child: Text(
                       "Choose an image",

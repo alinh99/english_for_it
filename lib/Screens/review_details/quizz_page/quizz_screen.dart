@@ -4,8 +4,7 @@ import 'package:flutter_eft/Screens/review_details/quizz_page/components/option_
 import 'package:flutter_eft/Screens/review_details/quizz_page/components/question_widget.dart';
 import 'package:flutter_eft/Screens/review_details/quizz_page/components/result_box.dart';
 import 'package:flutter_eft/Screens/review_details/quizz_page/models/question_model.dart';
-
-import '../../../constants.dart';
+import 'package:flutter_eft/constants.dart';
 import 'models/db_connect.dart';
 
 class QuizzScreen extends StatefulWidget {

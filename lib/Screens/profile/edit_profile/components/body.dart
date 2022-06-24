@@ -1,22 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_eft/Screens/splash/components/loading.dart';
 import 'package:flutter_eft/constants.dart';
 import 'profile_pic.dart';
 
 class Body extends StatefulWidget {
-  const Body({Key key, @required this.size, this.documentID}) : super(key: key);
+  const Body({Key key, @required this.size}) : super(key: key);
   final Size size;
-  final String documentID;
 
   @override
   _BodyState createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
-  bool showPassword = false;
+  bool _showPassword = true;
   bool loading = false;
+  bool isHover = false;
   @override
   void initState() {
     _getUserData();
@@ -192,51 +191,45 @@ class _BodyState extends State<Body> {
       padding: const EdgeInsets.only(bottom: 35),
       child: TextField(
         onChanged: (value) {
-          //Do something with the user input.
           placeHolder = value;
         },
-        obscureText: isPasswordTextField ? showPassword : false,
+        cursorColor: Colors.black,
+        obscureText: isPasswordTextField ? _showPassword : false,
         decoration: InputDecoration(
-            hoverColor: kBackgroundColor,
-            iconColor: kBackgroundColor,
-            suffixIcon: isPasswordTextField
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        showPassword = !showPassword;
-                      });
-                    },
-                    icon: showPassword == false
-                        ? const Icon(
-                            Icons.remove_red_eye,
-                            color: kBackgroundColor,
-                          )
-                        : const Icon(Icons.remove_red_eye_outlined,
-                            color: kBackgroundColor),
-                  )
-                : null,
-            contentPadding: const EdgeInsets.only(bottom: 3),
-            labelText: labelText,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: placeHolder,
-            hintStyle: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
-            )),
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: kBackgroundColor),
+          ),
+          // hoverColor: isHover == true ? kBackgroundColor : null,
+          // focusColor: kBackgroundColor,
+          iconColor: kBackgroundColor,
+          suffixIcon: isPasswordTextField
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _showPassword = !_showPassword;
+                    });
+                  },
+                  icon: _showPassword == false
+                      ? const Icon(
+                          Icons.remove_red_eye,
+                          color: kBackgroundColor,
+                        )
+                      : const Icon(Icons.remove_red_eye_outlined,
+                          color: kBackgroundColor),
+                )
+              : null,
+          contentPadding: const EdgeInsets.only(bottom: 3),
+          labelText: labelText,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          hintText: placeHolder,
+          labelStyle: const TextStyle(color: kBackgroundColor),
+          hintStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
+        ),
       ),
     );
   }
-
-  // List<Widget> getList() {
-  //   List<Users> userResults = [];
-  //   List<Widget> childs = userResults
-  //       .map((e) => Row(children: <Widget>[
-  //             Text(e.firstName, style: const TextStyle(fontSize: 25)),
-  //             Text(e.email, style: const TextStyle(fontSize: 25)),
-  //             Text(e.password, style: const TextStyle(fontSize: 25))
-  //           ]))
-  //       .toList();
-  //   return childs;
-  // }
 }

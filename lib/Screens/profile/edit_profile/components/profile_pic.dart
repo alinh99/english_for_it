@@ -19,9 +19,11 @@ class ProfilePic extends StatelessWidget {
               ? const CircleAvatar(
                   backgroundColor: Colors.grey,
                 )
-              : CircleAvatar(
-                  backgroundImage: NetworkImage(avatarUrl),
-                ),
+              : avatarUrl.isNotEmpty
+                  ? CircleAvatar(
+                      backgroundImage: NetworkImage(avatarUrl),
+                    )
+                  : null,
           Positioned(
             right: -16,
             bottom: 0,

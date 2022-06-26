@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/home/home_screen.dart';
 import 'package:flutter_eft/Screens/models/users.dart';
 import 'package:flutter_eft/Screens/services/auth.dart';
+import 'package:flutter_eft/Screens/services/database.dart';
 import 'package:flutter_eft/Screens/splash/components/loading.dart';
 import 'package:flutter_eft/constants.dart';
 import 'package:flutter_eft/Screens/splash/components/heading.dart';
@@ -19,7 +20,6 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
 
 class SplashScreen extends StatefulWidget {
   static String splashPage = "splash_screen";
@@ -38,6 +38,7 @@ class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   final AuthService _auth = AuthService();
   final FirebaseAuth auth = FirebaseAuth.instance;
+  DatabaseService _databaseService = DatabaseService();
   AnimationController _controller;
   TextEditingController emailEditingController = TextEditingController();
   PlatformFile pickedFile;
@@ -93,12 +94,10 @@ class _SplashScreenState extends State<SplashScreen>
         });
       },
     );
-    //loadingInProgress = false;
     _controller = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     _controller.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
-        //Navigator.pop(context);
         _controller.reset();
       }
     });
@@ -504,9 +503,10 @@ class _SplashScreenState extends State<SplashScreen>
                   });
                   if (formKeyFirst.currentState.validate() &&
                       formKeySecond.currentState.validate()) {
-                    dynamic result = await _auth.signInWithEmailAndPassword(
-                        emailEditingController.text,
-                        passwordEditingController.text);
+                    dynamic result =
+                        await _auth.signInWithEmailAndPassword(
+                            emailEditingController.text,
+                            passwordEditingController.text);
                     if (result == null) {
                       setState(() =>
                           error = 'COULD NOT SIGN IN WITH THOSE CREDENTIALS');
@@ -561,7 +561,6 @@ class _SplashScreenState extends State<SplashScreen>
                       'age': ageEditingController.text,
                       'email': emailEditingController.text,
                       'password': passwordEditingController.text,
-                      //'photo_url': uploadImage(),
                     });
                     setState(() {
                       _pageState = 4;
@@ -655,7 +654,13 @@ class _SplashScreenState extends State<SplashScreen>
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () async {},
+                  onTap: () async {
+                    XFile image = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+                    print(image.path);
+                    await _databaseService
+                        .updateProfilePicture(File(image.path));
+                  },
                   child: const Center(
                     child: Text(
                       "Choose an image",

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_eft/Screens/models/users.dart';
 import 'package:flutter_eft/Screens/profile/edit_profile/edit_profile_screen.dart';
 import 'package:flutter_eft/Screens/services/auth.dart';
 import 'package:flutter_eft/Screens/splash/splash_screen.dart';
@@ -18,7 +20,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   //final Users _currentUser = locator.get<DatabaseService>().currentUser;
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Stack(

@@ -146,7 +146,7 @@ class _BodyState extends State<Body> {
                                 "CANCEL",
                                 style: TextStyle(
                                   fontSize: 14,
-                                  letterSpacing: 2.2,
+                                  //letterSpacing: 0.3,
                                   color: Colors.black,
                                 ),
                               ),

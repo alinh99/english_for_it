@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/models/users.dart';
 import 'package:flutter_eft/Screens/services/database.dart';
+import 'package:flutter_eft/Screens/services/storage.dart';
 import 'package:flutter_eft/constants.dart';
+import 'package:image_picker/image_picker.dart';
 import 'profile_pic.dart';
 
 class Body extends StatefulWidget {
@@ -25,9 +29,18 @@ class _BodyState extends State<Body> {
     super.initState();
   }
 
+  TextEditingController firstNameEditingController = TextEditingController();
+  TextEditingController lastNameEditingController = TextEditingController();
+  TextEditingController ageEditingController = TextEditingController();
+  TextEditingController passwordEditingController = TextEditingController();
+
+  String url;
+
+  DatabaseService _databaseService;
   String userFirstName;
   String userLastName;
   String userPassword;
+  XFile image;
   String userImage;
   int userAge;
   Users user = Users(FirebaseAuth.instance.currentUser.uid);
@@ -77,7 +90,9 @@ class _BodyState extends State<Body> {
                   Row(
                     children: [
                       IconButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                         icon: const Icon(Icons.arrow_back),
                         alignment: Alignment.center,
                         color: Colors.white,
@@ -92,9 +107,6 @@ class _BodyState extends State<Body> {
                           child: Expanded(
                             child: ProfilePic(
                               avatarUrl: userImage,
-                              onTap: () async{
-                                
-                              },
                             ),
                           ),
                           alignment: Alignment.center,
@@ -180,22 +192,7 @@ class _BodyState extends State<Body> {
                           ),
                           Expanded(
                             child: RaisedButton(
-                              onPressed: () async {
-                                if (_formKeyPassword.currentState.validate()) {
-                                  //print("second workded");
-                                  await DatabaseService(
-                                          uid: FirebaseAuth
-                                              .instance.currentUser.uid)
-                                      .storeUserPassword(userPassword);
-                                } else if (_formKeyAge.currentState
-                                    .validate()) {
-                                  //print("third workded");
-                                  await DatabaseService(
-                                          uid: FirebaseAuth
-                                              .instance.currentUser.uid)
-                                      .storeUserDataAge(userAge);
-                                }
-                              },
+                              onPressed: () async {},
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 50),
                               color: kBackgroundColor,

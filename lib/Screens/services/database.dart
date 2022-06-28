@@ -9,7 +9,7 @@ class DatabaseService {
   final String uid;
   Users _currentUser;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  AuthService _authService = AuthService();
+  final AuthService _authService = AuthService();
   final Storage _storage = Storage();
   DatabaseService({this.uid});
   final CollectionReference userCollection =

@@ -1,12 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/Screens/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ProfilePic extends StatelessWidget {
-  const ProfilePic({Key key, this.avatarUrl, this.onTap}) : super(key: key);
-  final String avatarUrl;
-  final Function onTap;
+class ProfilePic extends StatefulWidget {
+  ProfilePic({Key key, this.avatarUrl}) : super(key: key);
+  String avatarUrl;
+  @override
+  _ProfilePicState createState() => _ProfilePicState();
+}
 
+class _ProfilePicState extends State<ProfilePic> {
+  final Storage _storage = Storage();
+  // String avatarUrl = widget.avatarUrl;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -16,13 +24,13 @@ class ProfilePic extends StatelessWidget {
         fit: StackFit.expand,
         clipBehavior: Clip.none,
         children: [
-          avatarUrl == null
+          widget.avatarUrl == null
               ? const CircleAvatar(
                   backgroundColor: Colors.grey,
                 )
-              : avatarUrl.isNotEmpty
+              : widget.avatarUrl.isNotEmpty
                   ? CircleAvatar(
-                      backgroundImage: NetworkImage(avatarUrl),
+                      backgroundImage: NetworkImage(widget.avatarUrl),
                     )
                   : null,
           Positioned(
@@ -41,11 +49,12 @@ class ProfilePic extends StatelessWidget {
                   backgroundColor: const Color(0xFFF5F6F9),
                 ),
                 onPressed: () async {
-                  final _imagePicker = ImagePicker();
-                  PickedFile image;
-                  image =
-                      await _imagePicker.getImage(source: ImageSource.gallery);
-                  print(image.path);
+                  XFile image = await ImagePicker()
+                      .pickImage(source: ImageSource.gallery);
+                  String url = await _storage.uploadFile(File(image.path));
+                  setState(() {
+                    widget.avatarUrl = url;
+                  });
                 },
                 child: const Icon(
                   CupertinoIcons.camera,

@@ -1,9 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_eft/Screens/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ProfilePic extends StatefulWidget {
   ProfilePic({Key key, this.avatarUrl}) : super(key: key);
@@ -13,8 +12,22 @@ class ProfilePic extends StatefulWidget {
 }
 
 class _ProfilePicState extends State<ProfilePic> {
-  final Storage _storage = Storage();
-  // String avatarUrl = widget.avatarUrl;
+  File image;
+  //connect camera
+  Future previewImageProfile() async {
+    print('Picker is Called');
+    XFile img = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (img != null) {
+      image = File(img.path);
+      setState(() {
+        isOldImage = false;
+      });
+    }
+  }
+
+  bool isOldImage = true;
+
+  //final Storage _storage = Storage();
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -25,14 +38,16 @@ class _ProfilePicState extends State<ProfilePic> {
         clipBehavior: Clip.none,
         children: [
           widget.avatarUrl == null
-              ? const CircleAvatar(
-                  backgroundColor: Colors.grey,
-                )
-              : widget.avatarUrl.isNotEmpty
+              ? const SpinKitCubeGrid(color: Color(0xFFF5F6F9))
+              : widget.avatarUrl != null && isOldImage
                   ? CircleAvatar(
                       backgroundImage: NetworkImage(widget.avatarUrl),
                     )
-                  : null,
+                  : widget.avatarUrl != null && isOldImage == false
+                      ? CircleAvatar(
+                          backgroundImage: Image.file(image).image,
+                        )
+                      : null,
           Positioned(
             right: -16,
             bottom: 0,
@@ -49,12 +64,7 @@ class _ProfilePicState extends State<ProfilePic> {
                   backgroundColor: const Color(0xFFF5F6F9),
                 ),
                 onPressed: () async {
-                  XFile image = await ImagePicker()
-                      .pickImage(source: ImageSource.gallery);
-                  String url = await _storage.uploadFile(File(image.path));
-                  setState(() {
-                    widget.avatarUrl = url;
-                  });
+                  await previewImageProfile();
                 },
                 child: const Icon(
                   CupertinoIcons.camera,

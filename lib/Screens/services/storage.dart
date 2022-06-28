@@ -17,6 +17,20 @@ class Storage {
     return downloadUrl;
   }
 
+  // Future uploadTempoFile(File filePath) async {
+  //   //File file = File(filePath);
+
+  //   try {
+  //     await FirebaseStorage.instance
+  //         .ref('user/profile/${_auth.currentUser.uid}')
+  //         .putFile(filePath);
+
+  //     //return uploadTask;
+  //   } on FirebaseException catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
+
   Future<String> getUserProfileImageDownloadUrl(String uid) async {
     var storageRef = storage.ref().child('user/profile/$uid');
     return await storageRef.getDownloadURL();

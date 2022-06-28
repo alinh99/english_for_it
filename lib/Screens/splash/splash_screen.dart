@@ -33,14 +33,11 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-//
-
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   final AuthService _auth = AuthService();
   final FirebaseAuth auth = FirebaseAuth.instance;
-  DatabaseService _databaseService = DatabaseService();
-  Storage _storage = Storage();
+  final Storage _storage = Storage();
   XFile image;
   AnimationController _controller;
   TextEditingController emailEditingController = TextEditingController();
@@ -176,7 +173,6 @@ class _SplashScreenState extends State<SplashScreen>
     _registerHeight = windowHeight - 270;
     _infoHeight = windowHeight - 270;
     final user = Provider.of<Users>(context);
-    print(user);
     if (user == null && _pageState == 1) {
       setState(() {
         _pageState = 1;

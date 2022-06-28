@@ -29,28 +29,23 @@ class _BodyState extends State<Body> {
     super.initState();
   }
 
+  File imagePath;
   TextEditingController firstNameEditingController = TextEditingController();
   TextEditingController lastNameEditingController = TextEditingController();
   TextEditingController ageEditingController = TextEditingController();
   TextEditingController passwordEditingController = TextEditingController();
-
   String url;
-
-  DatabaseService _databaseService;
   String userFirstName;
   String userLastName;
   String userPassword;
   XFile image;
   String userImage;
+  Users users;
   int userAge;
-  Users user = Users(FirebaseAuth.instance.currentUser.uid);
   final GlobalKey<FormState> _formKeyFirstName = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyLastName = GlobalKey<FormState>();
-
-  //final GlobalKey<FormState> _formKeyEmail = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyPassword = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyAge = GlobalKey<FormState>();
-  //Users user;
   Future<void> _getUserData() async {
     FirebaseFirestore.instance
         .collection('users')
@@ -101,7 +96,6 @@ class _BodyState extends State<Body> {
                   ),
                   Expanded(
                     child: Column(
-                      // ignore: prefer_const_literals_to_create_immutables
                       children: [
                         Align(
                           child: Expanded(
@@ -143,12 +137,14 @@ class _BodyState extends State<Body> {
                       height: 35,
                     ),
                     Expanded(
-                      child: buildTextField('First Name', userFirstName, false,
-                          _formKeyFirstName),
+                      child: buildTextField(
+                        'First Name',
+                        userFirstName,
+                        false,
+                      ),
                     ),
                     Expanded(
-                      child: buildTextField(
-                          'Last Name', userLastName, false, _formKeyLastName),
+                      child: buildTextField('Last Name', userLastName, false),
                     ),
                     Expanded(
                       child: buildTextField(
@@ -156,12 +152,10 @@ class _BodyState extends State<Body> {
                           userPassword.replaceAll(
                                   userPassword, '*' * userPassword.length) ??
                               '',
-                          true,
-                          _formKeyPassword),
+                          true),
                     ),
                     Expanded(
-                      child: buildTextField(
-                          'Age', userAge.toString(), false, _formKeyAge),
+                      child: buildTextField('Age', userAge.toString(), false),
                     ),
                     Expanded(
                       child: Row(
@@ -184,7 +178,6 @@ class _BodyState extends State<Body> {
                                 "CANCEL",
                                 style: TextStyle(
                                   fontSize: 14,
-                                  //letterSpacing: 0.3,
                                   color: Colors.black,
                                 ),
                               ),
@@ -204,7 +197,6 @@ class _BodyState extends State<Body> {
                                 "SAVE",
                                 style: TextStyle(
                                   fontSize: 14,
-                                  letterSpacing: 2.2,
                                   color: Colors.white,
                                 ),
                               ),
@@ -223,49 +215,46 @@ class _BodyState extends State<Body> {
     );
   }
 
-  Widget buildTextField(String labelText, String placeHolder,
-      bool isPasswordTextField, dynamic formKey) {
+  Widget buildTextField(
+      String labelText, String placeHolder, bool isPasswordTextField) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35),
-      child: Form(
-        key: formKey,
-        child: TextFormField(
-          onChanged: (value) {
-            placeHolder = value;
-          },
-          cursorColor: Colors.black,
-          obscureText: isPasswordTextField ? _showPassword : false,
-          decoration: InputDecoration(
-            focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBackgroundColor),
-            ),
-            iconColor: kBackgroundColor,
-            suffixIcon: isPasswordTextField
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _showPassword = !_showPassword;
-                      });
-                    },
-                    icon: _showPassword == false
-                        ? const Icon(
-                            Icons.remove_red_eye,
-                            color: kBackgroundColor,
-                          )
-                        : const Icon(Icons.remove_red_eye_outlined,
-                            color: kBackgroundColor),
-                  )
-                : null,
-            contentPadding: const EdgeInsets.only(bottom: 3),
-            labelText: labelText,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: placeHolder,
-            labelStyle: const TextStyle(color: kBackgroundColor),
-            hintStyle: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
-            ),
+      child: TextField(
+        onChanged: (value) {
+          placeHolder = value;
+        },
+        cursorColor: Colors.black,
+        obscureText: isPasswordTextField ? _showPassword : false,
+        decoration: InputDecoration(
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: kBackgroundColor),
+          ),
+          iconColor: kBackgroundColor,
+          suffixIcon: isPasswordTextField
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _showPassword = !_showPassword;
+                    });
+                  },
+                  icon: _showPassword == false
+                      ? const Icon(
+                          Icons.remove_red_eye,
+                          color: kBackgroundColor,
+                        )
+                      : const Icon(Icons.remove_red_eye_outlined,
+                          color: kBackgroundColor),
+                )
+              : null,
+          contentPadding: const EdgeInsets.only(bottom: 3),
+          labelText: labelText,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          hintText: placeHolder,
+          labelStyle: const TextStyle(color: kBackgroundColor),
+          hintStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
           ),
         ),
       ),

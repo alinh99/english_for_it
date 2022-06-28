@@ -57,13 +57,14 @@ class DatabaseService {
     });
   }
 
-  Future updateUserData(
-      String password, String firstName, String lastName, int age) async {
+  Future updateUserData(String password, String firstName, String lastName,
+      int age, String url) async {
     return await userCollection.doc(uid).set({
       'first_name': firstName,
       'last_name': lastName,
       'password': password,
       'age': age,
+      'photo_url': url,
     });
   }
 
@@ -79,7 +80,7 @@ class DatabaseService {
   }
 
   void updateProfilePicture(File image) async {
-    _currentUser = Users(_auth.currentUser.uid);
+    _currentUser = Users(uid: _auth.currentUser.uid);
     _currentUser.photoUrl = await _storage.uploadFile(image);
   }
 
@@ -88,4 +89,6 @@ class DatabaseService {
         await _authService.signInWithEmailAndPassword(email, password);
     _currentUser.photoUrl = await getDownloadURL();
   }
+
+
 }

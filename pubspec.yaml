@@ -49,6 +49,7 @@ dependencies:
   auth: ^8.1.0
   provider: ^6.0.3
   file_picker: ^4.6.1
+  transparent_image: ^2.0.0
 
 dev_dependencies:
   flutter_test:

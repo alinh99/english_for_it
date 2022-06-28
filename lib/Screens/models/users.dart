@@ -7,8 +7,9 @@ class Users {
   String uid;
   String photoUrl;
 
-  Users(this.uid,
-      {this.lastName,
+  Users(
+      {this.uid,
+      this.lastName,
       this.firstName,
       this.age,
       this.password,

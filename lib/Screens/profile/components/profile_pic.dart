@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ProfilePic extends StatefulWidget {
   const ProfilePic({Key key, this.avatarUrl, this.onTap}) : super(key: key);
@@ -19,11 +20,10 @@ class _ProfilePicState extends State<ProfilePic> {
         clipBehavior: Clip.none,
         children: [
           widget.avatarUrl == null
-              ? const CircleAvatar(
-                  backgroundColor: Colors.grey,
+              ? const SpinKitCubeGrid(
+                  color: Color(0xFFF5F6F9),
                 )
               : CircleAvatar(
-                  radius: 50.0,
                   backgroundImage: NetworkImage(widget.avatarUrl),
                 ),
         ],

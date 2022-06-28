@@ -8,7 +8,7 @@ class AuthService {
   Users _currentUser;
   final Storage _storage = Storage();
   Users _userFromFirebaseUser(User user) {
-    return user != null ? Users(user.uid) : null;
+    return user != null ? Users(uid: user.uid) : null;
   }
 
   Stream<Users> get user {
@@ -39,7 +39,7 @@ class AuthService {
     // }
     var authResult = await _auth.signInWithEmailAndPassword(
         email: email, password: password);
-    return Users(authResult.user.uid);
+    return Users(uid: authResult.user.uid);
   }
 
   Future registerWithEmailAndPassword(String email, String password) async {

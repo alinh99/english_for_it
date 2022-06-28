@@ -6,6 +6,7 @@ import 'package:flutter_eft/Screens/home/home_screen.dart';
 import 'package:flutter_eft/Screens/models/users.dart';
 import 'package:flutter_eft/Screens/services/auth.dart';
 import 'package:flutter_eft/Screens/services/database.dart';
+import 'package:flutter_eft/Screens/services/storage.dart';
 import 'package:flutter_eft/Screens/splash/components/loading.dart';
 import 'package:flutter_eft/constants.dart';
 import 'package:flutter_eft/Screens/splash/components/heading.dart';
@@ -39,6 +40,8 @@ class _SplashScreenState extends State<SplashScreen>
   final AuthService _auth = AuthService();
   final FirebaseAuth auth = FirebaseAuth.instance;
   DatabaseService _databaseService = DatabaseService();
+  Storage _storage = Storage();
+  XFile image;
   AnimationController _controller;
   TextEditingController emailEditingController = TextEditingController();
   PlatformFile pickedFile;
@@ -503,10 +506,9 @@ class _SplashScreenState extends State<SplashScreen>
                   });
                   if (formKeyFirst.currentState.validate() &&
                       formKeySecond.currentState.validate()) {
-                    dynamic result =
-                        await _auth.signInWithEmailAndPassword(
-                            emailEditingController.text,
-                            passwordEditingController.text);
+                    dynamic result = await _auth.signInWithEmailAndPassword(
+                        emailEditingController.text,
+                        passwordEditingController.text);
                     if (result == null) {
                       setState(() =>
                           error = 'COULD NOT SIGN IN WITH THOSE CREDENTIALS');
@@ -655,11 +657,8 @@ class _SplashScreenState extends State<SplashScreen>
               Expanded(
                 child: GestureDetector(
                   onTap: () async {
-                    XFile image = await ImagePicker()
+                    image = await ImagePicker()
                         .pickImage(source: ImageSource.gallery);
-                    print(image.path);
-                    await _databaseService
-                        .updateProfilePicture(File(image.path));
                   },
                   child: const Center(
                     child: Text(
@@ -681,6 +680,7 @@ class _SplashScreenState extends State<SplashScreen>
               onTap: () async {
                 if (_pageState == 4) {
                   try {
+                    final url = await _storage.uploadFile(File(image.path));
                     final userAge = await FirebaseFirestore.instance
                         .collection('users')
                         .doc(auth.currentUser.uid)
@@ -690,6 +690,7 @@ class _SplashScreenState extends State<SplashScreen>
                       'age': int.parse(ageEditingController.text),
                       'email': emailEditingController.text,
                       'password': passwordEditingController.text,
+                      'photo_url': url,
                     });
                     setState(() {
                       Navigator.of(context).push(

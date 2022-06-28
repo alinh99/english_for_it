@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfilePic extends StatelessWidget {
-  const ProfilePic({Key key, this.avatarUrl}) : super(key: key);
+  const ProfilePic({Key key, this.avatarUrl, this.onTap}) : super(key: key);
   final String avatarUrl;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {

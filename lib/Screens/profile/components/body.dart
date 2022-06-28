@@ -1,13 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_eft/Screens/models/users.dart';
 import 'package:flutter_eft/Screens/profile/edit_profile/edit_profile_screen.dart';
 import 'package:flutter_eft/Screens/services/auth.dart';
 import 'package:flutter_eft/Screens/splash/splash_screen.dart';
 import 'package:flutter_eft/constants.dart';
-
 import 'profile_menu.dart';
 import 'profile_pic.dart';
 
@@ -19,8 +18,26 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  //final Users _currentUser = locator.get<DatabaseService>().currentUser;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String userImage;
+
+  Future<void> _getUserImage() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc((FirebaseAuth.instance.currentUser).uid)
+        .get()
+        .then((value) {
+      setState(() {
+        userImage = value.data()['photo_url'];
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    _getUserImage();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -57,10 +74,7 @@ class _BodyState extends State<Body> {
                       children: [
                         Align(
                           child: Expanded(
-                            child: ProfilePic(
-                              avatarUrl: _auth.currentUser.photoURL,
-                              onTap: () {},
-                            ),
+                            child: ProfilePic(avatarUrl: userImage),
                           ),
                           alignment: Alignment.center,
                         ),

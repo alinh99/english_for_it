@@ -9,13 +9,14 @@ class DatabaseService {
   final String uid;
   Users _currentUser;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  AuthService _authService = AuthService();
   final Storage _storage = Storage();
   DatabaseService({this.uid});
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
 
   // add user data
-  Future updateUserEmailPassword(email, password) async {
+  Future storeUserEmailPassword(email, password) async {
     return await userCollection.doc(uid).set({
       'email': email,
       'password': password,
@@ -50,6 +51,28 @@ class DatabaseService {
     }
   }
 
+  Future storeUserPassword(password) async {
+    return await userCollection.doc(uid).set({
+      'password': password,
+    });
+  }
+
+  Future updateUserData(
+      String password, String firstName, String lastName, int age) async {
+    return await userCollection.doc(uid).set({
+      'first_name': firstName,
+      'last_name': lastName,
+      'password': password,
+      'age': age,
+    });
+  }
+
+  Future updateUserImage(File image) async {
+    final url = await _storage.uploadFile(image);
+    return await userCollection.doc(uid).set({
+      'photo_url': url,
+    });
+  }
 
   Future<String> getDownloadURL() async {
     return await _storage.getUserProfileImageDownloadUrl(_currentUser.uid);
@@ -58,5 +81,11 @@ class DatabaseService {
   void updateProfilePicture(File image) async {
     _currentUser = Users(_auth.currentUser.uid);
     _currentUser.photoUrl = await _storage.uploadFile(image);
+  }
+
+  Future signInWithEmailAndPassword(String email, String password) async {
+    _currentUser =
+        await _authService.signInWithEmailAndPassword(email, password);
+    _currentUser.photoUrl = await getDownloadURL();
   }
 }

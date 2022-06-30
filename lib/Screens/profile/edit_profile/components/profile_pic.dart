@@ -5,8 +5,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ProfilePic extends StatefulWidget {
-  ProfilePic({Key key, this.avatarUrl}) : super(key: key);
+  ProfilePic({Key key, this.avatarUrl, this.onTap, this.isOldImage})
+      : super(key: key);
   String avatarUrl;
+  Function onTap;
+  bool isOldImage;
   @override
   _ProfilePicState createState() => _ProfilePicState();
 }
@@ -38,8 +41,10 @@ class _ProfilePicState extends State<ProfilePic> {
         clipBehavior: Clip.none,
         children: [
           widget.avatarUrl == null
-              ? const SpinKitCubeGrid(color: Color(0xFFF5F6F9))
-              : widget.avatarUrl != null && isOldImage
+              ? const CircleAvatar(
+                  backgroundColor: Colors.grey,
+                )
+              : widget.avatarUrl != null && isOldImage == true
                   ? CircleAvatar(
                       backgroundImage: NetworkImage(widget.avatarUrl),
                     )
@@ -47,7 +52,7 @@ class _ProfilePicState extends State<ProfilePic> {
                       ? CircleAvatar(
                           backgroundImage: Image.file(image).image,
                         )
-                      : null,
+                      : const SpinKitCubeGrid(color: Color(0xFFF5F6F9)),
           Positioned(
             right: -16,
             bottom: 0,
@@ -66,6 +71,7 @@ class _ProfilePicState extends State<ProfilePic> {
                 onPressed: () async {
                   await previewImageProfile();
                 },
+                // onPressed: widget.onTap,
                 child: const Icon(
                   CupertinoIcons.camera,
                   color: Color(0xFF333333),

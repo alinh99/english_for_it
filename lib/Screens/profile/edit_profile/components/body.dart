@@ -1,13 +1,11 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/models/users.dart';
 import 'package:flutter_eft/Screens/services/database.dart';
 import 'package:flutter_eft/Screens/services/storage.dart';
 import 'package:flutter_eft/constants.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'profile_pic.dart';
 
 class Body extends StatefulWidget {
@@ -23,47 +21,57 @@ class _BodyState extends State<Body> {
   bool loading = false;
   bool isHover = false;
   bool isPlaceHolder = false;
+  // bool _isLoading  = false;
   @override
   void initState() {
-    _getUserData();
+    //_getUserData();
     super.initState();
   }
 
   File imagePath;
-  TextEditingController firstNameEditingController = TextEditingController();
-  TextEditingController lastNameEditingController = TextEditingController();
-  TextEditingController ageEditingController = TextEditingController();
-  TextEditingController passwordEditingController = TextEditingController();
   String url;
   String userFirstName;
   String userLastName;
   String userPassword;
-  XFile image;
+  File image;
   String userImage;
-  Users users;
+  Users users = Users();
+  final Storage _storage = Storage();
+  final _formKey = GlobalKey<FormState>();
+  AnimationController controller;
   int userAge;
-  final GlobalKey<FormState> _formKeyFirstName = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeyLastName = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeyPassword = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeyAge = GlobalKey<FormState>();
-  Future<void> _getUserData() async {
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc((FirebaseAuth.instance.currentUser).uid)
-        .get()
-        .then((value) {
+  // bool isOldImage = false;
+
+  final TextEditingController _firstName = TextEditingController();
+  final TextEditingController _lastName = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _age = TextEditingController();
+  final TextEditingController _photoUrl = TextEditingController();
+  bool isSaved;
+  @override
+  void dispose() {
+    _firstName.dispose();
+    _lastName.dispose();
+    _password.dispose();
+    _age.dispose();
+    _photoUrl.dispose();
+    super.dispose();
+  }
+
+  Future previewImageProfile() async {
+    print('Picker is Called');
+    XFile img = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (img != null) {
+      image = File(img.path);
       setState(() {
-        userFirstName = value.data()['first_name'];
-        userLastName = value.data()['last_name'];
-        userPassword = value.data()['password'];
-        userAge = value.data()['age'];
-        userImage = value.data()['photo_url'];
+        isSaved = false;
       });
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<Users>(context);
     return Stack(
       alignment: Alignment.topCenter,
       children: [
@@ -99,9 +107,27 @@ class _BodyState extends State<Body> {
                       children: [
                         Align(
                           child: Expanded(
-                            child: ProfilePic(
-                              avatarUrl: userImage,
-                            ),
+                            child: StreamBuilder(
+                                stream: DatabaseService(uid: user.uid).userData,
+                                builder: (context, snapshot) {
+                                  Users userData = snapshot.data;
+                                  if (snapshot.hasData) {
+                                    return ProfilePic(
+                                      avatarUrl: userData.photoUrl,
+                                      // isOldImage: isSaved == true,
+                                      // onTap: () async {
+                                      //   // if (isSaved == false) {
+                                      //   await previewImageProfile();
+                                      //   // } else {}
+                                      // },
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    print('${snapshot.error}');
+                                    return Text('${snapshot.error}');
+                                  } else {
+                                    return Text("Loading...");
+                                  }
+                                }),
                           ),
                           alignment: Alignment.center,
                         ),
@@ -137,74 +163,122 @@ class _BodyState extends State<Body> {
                       height: 35,
                     ),
                     Expanded(
-                      child: buildTextField(
-                        'First Name',
-                        userFirstName,
-                        false,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: StreamBuilder<Users>(
+                          stream: DatabaseService(uid: user.uid).userData,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              Users userData = snapshot.data;
+                              return Form(
+                                key: _formKey,
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: textEditProfileForm(
+                                          'First Name',
+                                          false,
+                                          userData.firstName,
+                                          _firstName),
+                                    ),
+                                    Expanded(
+                                      child: textEditProfileForm('Last Name',
+                                          false, userData.lastName, _lastName),
+                                    ),
+                                    Expanded(
+                                      child: textEditProfileForm(
+                                          'Password',
+                                          true,
+                                          '*' * userData.password.length,
+                                          _password),
+                                    ),
+                                    Expanded(
+                                      child: textEditProfileForm('Age', false,
+                                          userData.age.toString(), _age),
+                                    ),
+                                    Expanded(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: OutlinedButton(
+                                              style: OutlinedButton.styleFrom(
+                                                primary: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 50),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text(
+                                                "CANCEL",
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: RaisedButton(
+                                              onPressed: () async {
+                                                if (_formKey.currentState
+                                                    .validate()) {
+                                                  await DatabaseService(
+                                                          uid: user.uid)
+                                                      .updateUserData(
+                                                    _password.text ??
+                                                        userData.password,
+                                                    _firstName.text ??
+                                                        userData.firstName,
+                                                    _lastName.text ??
+                                                        userData.lastName,
+                                                    int.parse(_age.text) ??
+                                                        userData.age,
+                                                  );
+                                                }
+                                                Navigator.pop(context);
+                                              },
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 50),
+                                              color: kBackgroundColor,
+                                              elevation: 2,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: const Text(
+                                                "SAVE",
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              print('${snapshot.error}');
+                              return Text('${snapshot.error}');
+                            } else {
+                              return Text("Loading...");
+                            }
+                          },
+                        ),
                       ),
                     ),
-                    Expanded(
-                      child: buildTextField('Last Name', userLastName, false),
-                    ),
-                    Expanded(
-                      child: buildTextField(
-                          'Password',
-                          userPassword.replaceAll(
-                                  userPassword, '*' * userPassword.length) ??
-                              '',
-                          true),
-                    ),
-                    Expanded(
-                      child: buildTextField('Age', userAge.toString(), false),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                primary: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 50),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text(
-                                "CANCEL",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: RaisedButton(
-                              onPressed: () async {},
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 50),
-                              color: kBackgroundColor,
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: const Text(
-                                "SAVE",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -215,47 +289,49 @@ class _BodyState extends State<Body> {
     );
   }
 
-  Widget buildTextField(
-      String labelText, String placeHolder, bool isPasswordTextField) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 35),
-      child: TextField(
-        onChanged: (value) {
-          placeHolder = value;
-        },
-        cursorColor: Colors.black,
-        obscureText: isPasswordTextField ? _showPassword : false,
-        decoration: InputDecoration(
-          focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: kBackgroundColor),
-          ),
-          iconColor: kBackgroundColor,
-          suffixIcon: isPasswordTextField
-              ? IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _showPassword = !_showPassword;
-                    });
-                  },
-                  icon: _showPassword == false
-                      ? const Icon(
-                          Icons.remove_red_eye,
-                          color: kBackgroundColor,
-                        )
-                      : const Icon(Icons.remove_red_eye_outlined,
-                          color: kBackgroundColor),
-                )
-              : null,
-          contentPadding: const EdgeInsets.only(bottom: 3),
-          labelText: labelText,
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: placeHolder,
-          labelStyle: const TextStyle(color: kBackgroundColor),
-          hintStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey,
-          ),
+  TextFormField textEditProfileForm(String labelText, bool isPasswordTextField,
+      String val, TextEditingController editingController) {
+    return TextFormField(
+      onChanged: (value) {
+        if (value == null) {
+          val = value;
+        } else {
+          value = editingController.text.trim();
+        }
+      },
+      controller: editingController,
+      cursorColor: Colors.black,
+      obscureText: isPasswordTextField ? _showPassword : false,
+      decoration: InputDecoration(
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: kBackgroundColor),
+        ),
+        iconColor: kBackgroundColor,
+        suffixIcon: isPasswordTextField
+            ? IconButton(
+                onPressed: () {
+                  setState(() {
+                    _showPassword = !_showPassword;
+                  });
+                },
+                icon: _showPassword == false
+                    ? const Icon(
+                        Icons.remove_red_eye,
+                        color: kBackgroundColor,
+                      )
+                    : const Icon(Icons.remove_red_eye_outlined,
+                        color: kBackgroundColor),
+              )
+            : null,
+        contentPadding: const EdgeInsets.only(bottom: 3),
+        labelText: labelText,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: val,
+        labelStyle: const TextStyle(color: kBackgroundColor),
+        hintStyle: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
         ),
       ),
     );

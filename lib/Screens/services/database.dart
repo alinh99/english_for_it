@@ -57,14 +57,13 @@ class DatabaseService {
     });
   }
 
-  Future updateUserData(String password, String firstName, String lastName,
-      int age, String url) async {
+  Future updateUserData(
+      String password, String firstName, String lastName, int age) async {
     return await userCollection.doc(uid).set({
       'first_name': firstName,
       'last_name': lastName,
       'password': password,
       'age': age,
-      'photo_url': url,
     });
   }
 
@@ -90,5 +89,19 @@ class DatabaseService {
     _currentUser.photoUrl = await getDownloadURL();
   }
 
+  Users _userFromSnapshot(DocumentSnapshot snapshot) {
+    var docData = snapshot.data() as Map<String, dynamic>;
+    return Users(
+        uid: uid,
+        firstName: docData['first_name'],
+        lastName: docData['last_name'],
+        age: docData['age'],
+        email: docData['email'],
+        password: docData['password'],
+        photoUrl: docData['photo_url']);
+  }
 
+  Stream<Users> get userData {
+    return userCollection.doc(uid).snapshots().map(_userFromSnapshot);
+  }
 }

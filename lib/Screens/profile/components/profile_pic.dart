@@ -20,12 +20,16 @@ class _ProfilePicState extends State<ProfilePic> {
         clipBehavior: Clip.none,
         children: [
           widget.avatarUrl == null
-              ? const SpinKitCubeGrid(
-                  color: Color(0xFFF5F6F9),
+              ? const CircleAvatar(
+                  backgroundColor: Colors.grey,
                 )
-              : CircleAvatar(
-                  backgroundImage: NetworkImage(widget.avatarUrl),
-                ),
+              : widget.avatarUrl != null
+                  ? CircleAvatar(
+                      backgroundImage: NetworkImage(widget.avatarUrl),
+                    )
+                  : const SpinKitCubeGrid(
+                      color: Color(0xFFF5F6F9),
+                    ),
         ],
       ),
     );

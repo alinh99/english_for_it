@@ -20,12 +20,7 @@ class ProfilePicState extends State<ProfilePic> {
   static File image;
   File imageSaved;
   XFile img;
-  static String test;
-  // final Storage _storage = Storage();
-  final DatabaseService _databaseService = DatabaseService();
   bool isOldImage = true;
-
-  final Storage _storage = Storage();
   //connect camera
   Future updateImageProfile() async {
     print('Picker is Called');
@@ -38,7 +33,6 @@ class ProfilePicState extends State<ProfilePic> {
     setState(() {
       isOldImage = false;
     });
-    //test = image.toString();
   }
 
   @override
@@ -55,14 +49,10 @@ class ProfilePicState extends State<ProfilePic> {
                   backgroundColor: Colors.grey,
                 )
               : widget.avatarUrl != null && isOldImage == true
-                  //widget.isSaved == false
-                  // widget.isSaved == true
                   ? CircleAvatar(
                       backgroundImage: NetworkImage(widget.avatarUrl),
                     )
                   : widget.avatarUrl != null && isOldImage == false
-                      //widget.isSaved == true
-                      // widget.isSaved == false
                       ? CircleAvatar(
                           backgroundImage: Image.file(image).image,
                         )

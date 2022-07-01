@@ -237,32 +237,26 @@ class _BodyState extends State<Body> {
                                                 setState(() {
                                                   isSaved = true;
                                                 });
-                                                print(
-                                                    "elm ${ProfilePicState.image}");
-                                                // if (_formKey.currentState
-                                                //     .validate()) {
-                                                //   await DatabaseService(
-                                                //           uid: user.uid)
-                                                //       .updateUserData(
-                                                //     _password.text ??
-                                                //         userData.password,
-                                                //     _firstName.text ??
-                                                //         userData.firstName,
-                                                //     _lastName.text ??
-                                                //         userData.lastName,
-                                                //     // int.parse(_age.text) ??
-                                                //     //     userData.age,
-                                                //     userImage ??
-                                                //         userData.photoUrl,
-                                                //   );
-                                                //   // print(user.age);
-                                                //   // print(user.lastName);
-                                                //   // print(user.firstName);
-                                                //   // print(user.password);
-                                                //   print(user.photoUrl);
-                                                //   // print();
-                                                //   Navigator.pop(context);
-                                                // }
+                                                url = await _storage.uploadFile(
+                                                    File(ProfilePicState
+                                                        .image.path));
+                                                if (_formKey.currentState
+                                                    .validate()) {
+                                                  await DatabaseService(
+                                                          uid: user.uid)
+                                                      .updateUserData(
+                                                    _password.text ??
+                                                        userData.password,
+                                                    _firstName.text ??
+                                                        userData.firstName,
+                                                    _lastName.text ??
+                                                        userData.lastName,
+                                                    // int.parse(_age.text) ??
+                                                    //     userData.age,
+                                                    url ?? userData.photoUrl,
+                                                  );
+                                                  Navigator.pop(context);
+                                                }
                                               },
                                               padding:
                                                   const EdgeInsets.symmetric(

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_eft/Screens/models/users.dart';
 import 'package:flutter_eft/Screens/services/auth.dart';
 import 'package:flutter_eft/Screens/services/storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class DatabaseService {
   final String uid;
@@ -27,8 +28,8 @@ class DatabaseService {
       firstNameEditingController, lastNameEditingController) async {
     try {
       final userName = await userCollection.doc(uid).set({
-        'first_name': firstNameEditingController,
-        'last_name': lastNameEditingController,
+        'first_name': firstNameEditingController.text,
+        'last_name': lastNameEditingController.text,
       });
       return userName;
     } catch (e) {
@@ -42,7 +43,7 @@ class DatabaseService {
   ) async {
     try {
       final userAge = await userCollection.doc(uid).set({
-        'age': ageEditingController,
+        'age': ageEditingController.text,
       });
       return userAge;
     } catch (e) {
@@ -58,12 +59,13 @@ class DatabaseService {
   }
 
   Future updateUserData(
-      String password, String firstName, String lastName, int age) async {
+      String password, String firstName, String lastName, String image) async {
     return await userCollection.doc(uid).set({
       'first_name': firstName,
       'last_name': lastName,
       'password': password,
-      'age': age,
+      // 'age': age,
+      'photo_url': image,
     });
   }
 
@@ -104,4 +106,5 @@ class DatabaseService {
   Stream<Users> get userData {
     return userCollection.doc(uid).snapshots().map(_userFromSnapshot);
   }
+
 }

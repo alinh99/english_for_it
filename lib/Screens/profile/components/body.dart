@@ -3,10 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/Screens/models/users.dart';
 import 'package:flutter_eft/Screens/profile/edit_profile/edit_profile_screen.dart';
 import 'package:flutter_eft/Screens/services/auth.dart';
+import 'package:flutter_eft/Screens/services/database.dart';
 import 'package:flutter_eft/Screens/splash/splash_screen.dart';
 import 'package:flutter_eft/constants.dart';
+import 'package:provider/provider.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
 
@@ -20,26 +23,27 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   String userImage;
 
-  Future<void> _getUserImage() async {
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc((FirebaseAuth.instance.currentUser).uid)
-        .get()
-        .then((value) {
-      setState(() {
-        userImage = value.data()['photo_url'];
-      });
-    });
-  }
+  // Future<void> _getUserImage() async {
+  //   FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc((FirebaseAuth.instance.currentUser).uid)
+  //       .get()
+  //       .then((value) {
+  //     setState(() {
+  //       userImage = value.data()['photo_url'];
+  //     });
+  //   });
+  // }
 
   @override
   void initState() {
-    _getUserImage();
+    // _getUserImage();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<Users>(context);
     return Stack(
       alignment: Alignment.topCenter,
       children: [
@@ -74,7 +78,27 @@ class _BodyState extends State<Body> {
                       children: [
                         Align(
                           child: Expanded(
-                            child: ProfilePic(avatarUrl: userImage),
+                            child: StreamBuilder(
+                              stream: DatabaseService(uid: user.uid).userData,
+                              builder: (context, snapshot) {
+                                Users userData = snapshot.data;
+
+                                if (snapshot.hasData) {
+                                  // setState(() {
+                                  //   isSaved = false;
+                                  // });
+                                  // if(isSaved == false) {}
+                                  return ProfilePic(
+                                    avatarUrl: userData.photoUrl,
+                                  );
+                                } else if (snapshot.hasError) {
+                                  print('${snapshot.error}');
+                                  return Text('${snapshot.error}');
+                                } else {
+                                  return Text("Loading...");
+                                }
+                              },
+                            ),
                           ),
                           alignment: Alignment.center,
                         ),

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/models/users.dart';
 import 'package:flutter_eft/Screens/services/database.dart';
@@ -34,20 +36,18 @@ class _BodyState extends State<Body> {
   String userLastName;
   String userPassword;
   File image;
+  XFile img;
   String userImage;
   Users users = Users();
   final Storage _storage = Storage();
   final _formKey = GlobalKey<FormState>();
   AnimationController controller;
-  int userAge;
-  // bool isOldImage = false;
-
   final TextEditingController _firstName = TextEditingController();
   final TextEditingController _lastName = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _age = TextEditingController();
   final TextEditingController _photoUrl = TextEditingController();
-  bool isSaved;
+  bool isSaved = false;
   @override
   void dispose() {
     _firstName.dispose();
@@ -58,15 +58,16 @@ class _BodyState extends State<Body> {
     super.dispose();
   }
 
-  Future previewImageProfile() async {
-    print('Picker is Called');
-    XFile img = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (img != null) {
-      image = File(img.path);
+  Future<void> _getUserImage() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc((FirebaseAuth.instance.currentUser).uid)
+        .get()
+        .then((value) {
       setState(() {
-        isSaved = false;
+        userImage = value.data()['photo_url'];
       });
-    }
+    });
   }
 
   @override
@@ -107,27 +108,27 @@ class _BodyState extends State<Body> {
                       children: [
                         Align(
                           child: Expanded(
+                            // child: ProfilePic(
+                            //   isSaved: isSaved,
+                            //   avatarUrl: userImage,
+                            // ),
                             child: StreamBuilder(
-                                stream: DatabaseService(uid: user.uid).userData,
-                                builder: (context, snapshot) {
-                                  Users userData = snapshot.data;
-                                  if (snapshot.hasData) {
-                                    return ProfilePic(
-                                      avatarUrl: userData.photoUrl,
-                                      // isOldImage: isSaved == true,
-                                      // onTap: () async {
-                                      //   // if (isSaved == false) {
-                                      //   await previewImageProfile();
-                                      //   // } else {}
-                                      // },
-                                    );
-                                  } else if (snapshot.hasError) {
-                                    print('${snapshot.error}');
-                                    return Text('${snapshot.error}');
-                                  } else {
-                                    return Text("Loading...");
-                                  }
-                                }),
+                              stream: DatabaseService(uid: user.uid).userData,
+                              builder: (context, snapshot) {
+                                Users userData = snapshot.data;
+                                if (snapshot.hasData) {
+                                  return ProfilePic(
+                                    avatarUrl: userData.photoUrl,
+                                    isSaved: isSaved,
+                                  );
+                                } else if (snapshot.hasError) {
+                                  print('${snapshot.error}');
+                                  return Text('${snapshot.error}');
+                                } else {
+                                  return Text("Loading...");
+                                }
+                              },
+                            ),
                           ),
                           alignment: Alignment.center,
                         ),
@@ -170,6 +171,7 @@ class _BodyState extends State<Body> {
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               Users userData = snapshot.data;
+                              print(userData.firstName);
                               return Form(
                                 key: _formKey,
                                 child: Column(
@@ -178,18 +180,22 @@ class _BodyState extends State<Body> {
                                       child: textEditProfileForm(
                                           'First Name',
                                           false,
-                                          userData.firstName,
+                                          userData.firstName.toString(),
                                           _firstName),
                                     ),
                                     Expanded(
-                                      child: textEditProfileForm('Last Name',
-                                          false, userData.lastName, _lastName),
+                                      child: textEditProfileForm(
+                                          'Last Name',
+                                          false,
+                                          userData.lastName.toString(),
+                                          _lastName),
                                     ),
                                     Expanded(
                                       child: textEditProfileForm(
                                           'Password',
                                           true,
-                                          '*' * userData.password.length,
+                                          ('*' * userData.password.length)
+                                              .toString(),
                                           _password),
                                     ),
                                     Expanded(
@@ -228,22 +234,35 @@ class _BodyState extends State<Body> {
                                           Expanded(
                                             child: RaisedButton(
                                               onPressed: () async {
-                                                if (_formKey.currentState
-                                                    .validate()) {
-                                                  await DatabaseService(
-                                                          uid: user.uid)
-                                                      .updateUserData(
-                                                    _password.text ??
-                                                        userData.password,
-                                                    _firstName.text ??
-                                                        userData.firstName,
-                                                    _lastName.text ??
-                                                        userData.lastName,
-                                                    int.parse(_age.text) ??
-                                                        userData.age,
-                                                  );
-                                                }
-                                                Navigator.pop(context);
+                                                setState(() {
+                                                  isSaved = true;
+                                                });
+                                                print(
+                                                    "elm ${ProfilePicState.image}");
+                                                // if (_formKey.currentState
+                                                //     .validate()) {
+                                                //   await DatabaseService(
+                                                //           uid: user.uid)
+                                                //       .updateUserData(
+                                                //     _password.text ??
+                                                //         userData.password,
+                                                //     _firstName.text ??
+                                                //         userData.firstName,
+                                                //     _lastName.text ??
+                                                //         userData.lastName,
+                                                //     // int.parse(_age.text) ??
+                                                //     //     userData.age,
+                                                //     userImage ??
+                                                //         userData.photoUrl,
+                                                //   );
+                                                //   // print(user.age);
+                                                //   // print(user.lastName);
+                                                //   // print(user.firstName);
+                                                //   // print(user.password);
+                                                //   print(user.photoUrl);
+                                                //   // print();
+                                                //   Navigator.pop(context);
+                                                // }
                                               },
                                               padding:
                                                   const EdgeInsets.symmetric(
@@ -294,7 +313,7 @@ class _BodyState extends State<Body> {
     return TextFormField(
       onChanged: (value) {
         if (value == null) {
-          val = value;
+          value = val;
         } else {
           value = editingController.text.trim();
         }

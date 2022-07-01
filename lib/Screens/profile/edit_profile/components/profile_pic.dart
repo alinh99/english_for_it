@@ -1,36 +1,46 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/Screens/services/database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_eft/Screens/services/storage.dart';
 
 class ProfilePic extends StatefulWidget {
-  ProfilePic({Key key, this.avatarUrl, this.onTap, this.isOldImage})
+  ProfilePic({Key key, this.avatarUrl, this.isSaved, this.editingController})
       : super(key: key);
   String avatarUrl;
-  Function onTap;
-  bool isOldImage;
+  bool isSaved;
+  TextEditingController editingController;
   @override
-  _ProfilePicState createState() => _ProfilePicState();
+  ProfilePicState createState() => ProfilePicState();
 }
 
-class _ProfilePicState extends State<ProfilePic> {
-  File image;
-  //connect camera
-  Future previewImageProfile() async {
-    print('Picker is Called');
-    XFile img = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (img != null) {
-      image = File(img.path);
-      setState(() {
-        isOldImage = false;
-      });
-    }
-  }
-
+class ProfilePicState extends State<ProfilePic> {
+  static File image;
+  File imageSaved;
+  XFile img;
+  static String test;
+  // final Storage _storage = Storage();
+  final DatabaseService _databaseService = DatabaseService();
   bool isOldImage = true;
 
-  //final Storage _storage = Storage();
+  final Storage _storage = Storage();
+  //connect camera
+  Future updateImageProfile() async {
+    print('Picker is Called');
+    img = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (img != null) {
+      image = File(img.path);
+      print('Image' + image.path);
+    }
+    setState(() {
+      isOldImage = false;
+    });
+    //test = image.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -45,14 +55,22 @@ class _ProfilePicState extends State<ProfilePic> {
                   backgroundColor: Colors.grey,
                 )
               : widget.avatarUrl != null && isOldImage == true
+                  //widget.isSaved == false
+                  // widget.isSaved == true
                   ? CircleAvatar(
                       backgroundImage: NetworkImage(widget.avatarUrl),
                     )
                   : widget.avatarUrl != null && isOldImage == false
+                      //widget.isSaved == true
+                      // widget.isSaved == false
                       ? CircleAvatar(
                           backgroundImage: Image.file(image).image,
                         )
-                      : const SpinKitCubeGrid(color: Color(0xFFF5F6F9)),
+                      : widget.isSaved == true && widget.avatarUrl != null
+                          ? CircleAvatar(
+                              backgroundImage: NetworkImage(widget.avatarUrl),
+                            )
+                          : null,
           Positioned(
             right: -16,
             bottom: 0,
@@ -69,9 +87,8 @@ class _ProfilePicState extends State<ProfilePic> {
                   backgroundColor: const Color(0xFFF5F6F9),
                 ),
                 onPressed: () async {
-                  await previewImageProfile();
+                  await updateImageProfile();
                 },
-                // onPressed: widget.onTap,
                 child: const Icon(
                   CupertinoIcons.camera,
                   color: Color(0xFF333333),

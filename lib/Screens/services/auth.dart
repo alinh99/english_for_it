@@ -28,15 +28,6 @@ class AuthService {
 
   Future<Users> signInWithEmailAndPassword(
       String email, String password) async {
-    // try {
-    //   UserCredential result = await _auth.signInWithEmailAndPassword(
-    //       email: email, password: password);
-    //   User user = result.user;
-    //   return _userFromFirebaseUser(user);
-    // } catch (e) {
-    //   print(e.toString());
-    //   return null;
-    // }
     var authResult = await _auth.signInWithEmailAndPassword(
         email: email, password: password);
     return Users(uid: authResult.user.uid);
@@ -48,7 +39,7 @@ class AuthService {
           email: email, password: password);
       User user = result.user;
       await DatabaseService(uid: user.uid)
-          .storeUserEmailPassword(email, password);
+          .updateUserEmailPassword(email, password);
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());

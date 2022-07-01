@@ -17,28 +17,44 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('users');
 
   // add user data
-  Future storeUserEmailPassword(email, password) async {
+  Future updateUserEmailPassword(email, password) async {
     return await userCollection.doc(uid).set({
       'email': email,
       'password': password,
     });
   }
 
-  Future storeUserDataName(
-      firstNameEditingController, lastNameEditingController) async {
+    Future updateUserPassword(password) async {
+    return await userCollection.doc(uid).set({
+      'password': password,
+    });
+  }
+
+  Future updateUserFirstName(firstNameEditingController) async {
     try {
-      final userName = await userCollection.doc(uid).set({
+      final userFirstName = await userCollection.doc(uid).set({
         'first_name': firstNameEditingController.text,
-        'last_name': lastNameEditingController.text,
       });
-      return userName;
+      return userFirstName;
     } catch (e) {
       print(e.toString());
       return null;
     }
   }
 
-  Future storeUserDataAge(
+  Future updateUserLastName(lastNameEditingController) async {
+    try {
+      final userLastName = await userCollection.doc(uid).set({
+        'last_name': lastNameEditingController.text,
+      });
+      return userLastName;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future updateUserAge(
     ageEditingController,
   ) async {
     try {
@@ -52,27 +68,22 @@ class DatabaseService {
     }
   }
 
-  Future storeUserPassword(password) async {
-    return await userCollection.doc(uid).set({
-      'password': password,
-    });
-  }
 
   Future updateUserData(
-      String password, String firstName, String lastName, String image) async {
+      String password, String firstName, String lastName, int age, String image) async {
     return await userCollection.doc(uid).set({
       'first_name': firstName,
       'last_name': lastName,
       'password': password,
-      // 'age': age,
+      'age': age,
       'photo_url': image,
     });
   }
 
-  Future updateUserImage(File image) async {
-    final url = await _storage.uploadFile(image);
+  Future updateUserImage(String image) async {
+    //final url = await _storage.uploadFile(File(image));
     return await userCollection.doc(uid).set({
-      'photo_url': url,
+      'photo_url': image,
     });
   }
 
@@ -106,5 +117,4 @@ class DatabaseService {
   Stream<Users> get userData {
     return userCollection.doc(uid).snapshots().map(_userFromSnapshot);
   }
-
 }

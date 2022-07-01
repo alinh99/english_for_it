@@ -40,6 +40,10 @@ class _BodyState extends State<Body> {
   String userImage;
   Users users = Users();
   final Storage _storage = Storage();
+  // final _formKeyFirstName = GlobalKey<FormState>();
+  // final _formKeyLastName = GlobalKey<FormState>();
+  // final _formKeyAge = GlobalKey<FormState>();
+  // final _formKeyPassword = GlobalKey<FormState>();
   final _formKey = GlobalKey<FormState>();
   AnimationController controller;
   final TextEditingController _firstName = TextEditingController();
@@ -178,29 +182,35 @@ class _BodyState extends State<Body> {
                                   children: [
                                     Expanded(
                                       child: textEditProfileForm(
-                                          'First Name',
-                                          false,
-                                          userData.firstName.toString(),
-                                          _firstName),
+                                        'First Name',
+                                        false,
+                                        userData.firstName.toString(),
+                                        _firstName,
+                                      ),
                                     ),
                                     Expanded(
                                       child: textEditProfileForm(
-                                          'Last Name',
-                                          false,
-                                          userData.lastName.toString(),
-                                          _lastName),
+                                        'Last Name',
+                                        false,
+                                        userData.lastName.toString(),
+                                        _lastName,
+                                      ),
                                     ),
                                     Expanded(
                                       child: textEditProfileForm(
-                                          'Password',
-                                          true,
-                                          ('*' * userData.password.length)
-                                              .toString(),
-                                          _password),
+                                        'Password',
+                                        true,
+                                        '*'.toString(),
+                                        _password,
+                                      ),
                                     ),
                                     Expanded(
-                                      child: textEditProfileForm('Age', false,
-                                          userData.age.toString(), _age),
+                                      child: textEditProfileForm(
+                                        'Age',
+                                        false,
+                                        userData.age.toString(),
+                                        _age,
+                                      ),
                                     ),
                                     Expanded(
                                       child: Row(
@@ -240,6 +250,7 @@ class _BodyState extends State<Body> {
                                                 url = await _storage.uploadFile(
                                                     File(ProfilePicState
                                                         .image.path));
+
                                                 if (_formKey.currentState
                                                     .validate()) {
                                                   await DatabaseService(
@@ -251,8 +262,8 @@ class _BodyState extends State<Body> {
                                                         userData.firstName,
                                                     _lastName.text ??
                                                         userData.lastName,
-                                                    // int.parse(_age.text) ??
-                                                    //     userData.age,
+                                                    int.parse(_age.text) ??
+                                                        userData.age,
                                                     url ?? userData.photoUrl,
                                                   );
                                                   Navigator.pop(context);
@@ -345,6 +356,60 @@ class _BodyState extends State<Body> {
           fontSize: 16,
           fontWeight: FontWeight.bold,
           color: Colors.grey,
+        ),
+      ),
+    );
+  }
+
+  Widget buidTextField(String labelText, String val, bool isPasswordTextField,
+      TextEditingController editingController, formKey) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 35),
+      child: Form(
+        key: formKey,
+        child: TextFormField(
+          onChanged: (value) {
+            if (value == null) {
+              value = val;
+            } else {
+              value = editingController.text.trim();
+            }
+          },
+          controller: editingController,
+          cursorColor: Colors.black,
+          obscureText: isPasswordTextField ? _showPassword : false,
+          decoration: InputDecoration(
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: kBackgroundColor),
+            ),
+            iconColor: kBackgroundColor,
+            suffixIcon: isPasswordTextField
+                ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _showPassword = !_showPassword;
+                      });
+                    },
+                    icon: _showPassword == false
+                        ? const Icon(
+                            Icons.remove_red_eye,
+                            color: kBackgroundColor,
+                          )
+                        : const Icon(Icons.remove_red_eye_outlined,
+                            color: kBackgroundColor),
+                  )
+                : null,
+            contentPadding: const EdgeInsets.only(bottom: 3),
+            labelText: labelText,
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            hintText: val,
+            labelStyle: const TextStyle(color: kBackgroundColor),
+            hintStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
         ),
       ),
     );

@@ -199,7 +199,6 @@ class _BodyState extends State<Body> {
                                     Expanded(
                                       child: textEditProfileForm(
                                         'Password',
-                                        
                                         true,
                                         '*'.toString(),
                                         _password,

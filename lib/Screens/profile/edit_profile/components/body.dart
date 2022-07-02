@@ -251,31 +251,22 @@ class _BodyState extends State<Body> {
                                                 url = await _storage.uploadFile(
                                                     File(ProfilePicState
                                                         .image.path));
-
                                                 if (_formKey.currentState
                                                     .validate()) {
                                                   await DatabaseService(
                                                           uid: user.uid)
                                                       .updateUserData(
-                                                    _password.text.toString() ??
+                                                    _password.text ??
                                                         userData.password,
-                                                    _firstName.text
-                                                            .toString()
-                                                            .trim() ??
+                                                    _firstName.text ??
                                                         userData.firstName,
-                                                    _lastName.text
-                                                            .toString()
-                                                            .trim() ??
+                                                    _lastName.text ??
                                                         userData.lastName,
-                                                    int.tryParse(_age.text
-                                                            .toString()
-                                                            .trim()) ??
+                                                    int.tryParse(_age.text) ??
                                                         userData.age,
                                                     url ?? userData.photoUrl,
                                                   );
                                                   Navigator.pop(context);
-                                                  print("Password:" +
-                                                      userData.password);
                                                 }
                                               },
                                               padding:

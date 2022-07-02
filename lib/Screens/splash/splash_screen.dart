@@ -557,7 +557,6 @@ class _SplashScreenState extends State<SplashScreen>
                       'first_name': firstNameEditingController.text,
                       'last_name': lastNameEditingController.text,
                       'age': ageEditingController.text,
-                      'email': emailEditingController.text,
                       'password': passwordEditingController.text,
                     });
                     setState(() {
@@ -684,7 +683,6 @@ class _SplashScreenState extends State<SplashScreen>
                       'first_name': firstNameEditingController.text,
                       'last_name': lastNameEditingController.text,
                       'age': int.parse(ageEditingController.text),
-                      'email': emailEditingController.text,
                       'password': passwordEditingController.text,
                       'photo_url': url,
                     });

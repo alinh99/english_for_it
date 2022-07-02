@@ -24,7 +24,7 @@ class DatabaseService {
     });
   }
 
-    Future updateUserPassword(password) async {
+  Future updateUserPassword(password) async {
     return await userCollection.doc(uid).set({
       'password': password,
     });
@@ -68,9 +68,8 @@ class DatabaseService {
     }
   }
 
-
   Future updateUserData(
-      String password, String firstName, String lastName, int age, String image) async {
+      password, firstName, lastName, int age, String image) async {
     return await userCollection.doc(uid).set({
       'first_name': firstName,
       'last_name': lastName,

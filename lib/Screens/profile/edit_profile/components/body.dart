@@ -200,7 +200,8 @@ class _BodyState extends State<Body> {
                                       child: textEditProfileForm(
                                         'Password',
                                         true,
-                                        '*'.toString(),
+                                        ('*' * userData.password.length)
+                                            .toString(),
                                         _password,
                                       ),
                                     ),
@@ -256,17 +257,25 @@ class _BodyState extends State<Body> {
                                                   await DatabaseService(
                                                           uid: user.uid)
                                                       .updateUserData(
-                                                    _password.text ??
+                                                    _password.text.toString() ??
                                                         userData.password,
-                                                    _firstName.text ??
+                                                    _firstName.text
+                                                            .toString()
+                                                            .trim() ??
                                                         userData.firstName,
-                                                    _lastName.text ??
+                                                    _lastName.text
+                                                            .toString()
+                                                            .trim() ??
                                                         userData.lastName,
-                                                    int.parse(_age.text) ??
+                                                    int.tryParse(_age.text
+                                                            .toString()
+                                                            .trim()) ??
                                                         userData.age,
                                                     url ?? userData.photoUrl,
                                                   );
                                                   Navigator.pop(context);
+                                                  print("Password:" +
+                                                      userData.password);
                                                 }
                                               },
                                               padding:
@@ -320,7 +329,7 @@ class _BodyState extends State<Body> {
         if (value == null) {
           value = val;
         } else {
-          value = editingController.text.trim();
+          value = editingController.text.toString().trim();
         }
       },
       controller: editingController,

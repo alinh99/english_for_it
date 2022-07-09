@@ -32,10 +32,10 @@ class DatabaseService {
 
   Future updateUserFirstName(firstNameEditingController) async {
     try {
-      final userFirstName = await userCollection.doc(uid).set({
-        'first_name': firstNameEditingController.text,
+      final userName = await userCollection.doc(uid).set({
+        'first_name': firstNameEditingController,
       });
-      return userFirstName;
+      return userName;
     } catch (e) {
       print(e.toString());
       return null;
@@ -44,10 +44,10 @@ class DatabaseService {
 
   Future updateUserLastName(lastNameEditingController) async {
     try {
-      final userLastName = await userCollection.doc(uid).set({
-        'last_name': lastNameEditingController.text,
+      final userName = await userCollection.doc(uid).set({
+        'lastName': lastNameEditingController,
       });
-      return userLastName;
+      return userName;
     } catch (e) {
       print(e.toString());
       return null;
@@ -68,8 +68,8 @@ class DatabaseService {
     }
   }
 
-  Future updateUserData(
-      password, firstName, lastName, int age, String image) async {
+  Future updateUserData(String password, String firstName, String lastName,
+      int age, String image) async {
     return await userCollection.doc(uid).set({
       'first_name': firstName,
       'last_name': lastName,

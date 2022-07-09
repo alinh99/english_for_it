@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/home/components/style.dart';
 import 'package:flutter_eft/Components/seassion_card.dart';
+import 'package:flutter_eft/Screens/lessons/lesson.dart';
 import 'background.dart';
 
 class Body extends StatefulWidget {
@@ -75,7 +76,12 @@ class _BodyState extends State<Body> {
                             children: <Widget>[
                               SeassionCard(
                                 seassionNum: 1,
-                                press: () {},
+                                press: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return Lesson();
+                                  }));
+                                },
                               ),
                               SeassionCard(
                                 seassionNum: 2,

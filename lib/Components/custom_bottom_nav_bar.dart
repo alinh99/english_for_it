@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_eft/Screens/review/review_screen.dart';
+import 'package:flutter_eft/Screens/review_details/review_details_screen.dart';
 import 'package:flutter_eft/constants.dart';
 import 'package:flutter_eft/screens/home/home_screen.dart';
 import 'package:flutter_eft/screens/profile/profile_screen.dart';
 import 'box_decoration.dart';
-import '../constants.dart';
-import '../enums.dart';
+import 'package:flutter_eft/enums.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   const CustomBottomNavBar({
@@ -53,7 +52,7 @@ class CustomBottomNavBar extends StatelessWidget {
                   MaterialPageRoute(
                     settings: const RouteSettings(name: '/review_screen'),
                     builder: (BuildContext context) {
-                      return const ReviewScreen();
+                      return const ReviewDetailsScreen();
                     },
                   ),
                 ),

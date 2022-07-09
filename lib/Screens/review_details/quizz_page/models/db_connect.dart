@@ -7,17 +7,17 @@ class DBConnect {
   final url = Uri.parse(
       'https://flutter-eft-final-default-rtdb.firebaseio.com/question.json');
   // add question - move to CRUD admin page later
-  // Future<void> addQuestion(Question question) async {
-  //   http.post(
-  //     url,
-  //     body: json.encode(
-  //       {
-  //         'title': question.title,
-  //         'option': question.options,
-  //       },
-  //     ),
-  //   );
-  // }
+  Future<void> addQuestion(Question question) async {
+    http.post(
+      url,
+      body: json.encode(
+        {
+          'title': question.title,
+          'option': question.options,
+        },
+      ),
+    );
+  }
 
   // fetch data from db
   Future<List<Question>> fetchQuestion() async {

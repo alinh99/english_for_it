@@ -4,7 +4,6 @@ import 'package:flutter_eft/Screens/review_details/components/reuseable_card.dar
 import 'package:flutter_eft/Screens/review_details/quizz_page/quizz_screen.dart';
 import 'package:flutter_eft/constants.dart';
 
-
 class Body extends StatelessWidget {
   const Body({
     Key key,
@@ -93,15 +92,15 @@ class Body extends StatelessWidget {
                         GestureDetector(
                           child: Center(
                             child: Text(
-                              "Quizz",
+                              "Quiz",
                               style: AppStyle.b32w,
                             ),
                           ),
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                settings: const RouteSettings(
-                                    name: '/quizz_screen'),
+                                settings:
+                                    const RouteSettings(name: '/quizz_screen'),
                                 builder: (BuildContext context) {
                                   return const QuizzScreen();
                                 },

@@ -177,7 +177,8 @@ class _SplashScreenState extends State<SplashScreen>
       setState(() {
         _pageState = 1;
       });
-    } else if (user != null && _pageState > 4) {
+      print("no user");
+    } else if (_pageState > 4 || user != null && _pageState == 1) {
       return const HomeScreen();
     }
     switch (_pageState) {
@@ -557,6 +558,7 @@ class _SplashScreenState extends State<SplashScreen>
                       'first_name': firstNameEditingController.text,
                       'last_name': lastNameEditingController.text,
                       'age': ageEditingController.text,
+                      'email': emailEditingController.text,
                       'password': passwordEditingController.text,
                     });
                     setState(() {
@@ -682,10 +684,11 @@ class _SplashScreenState extends State<SplashScreen>
                         .set({
                       'first_name': firstNameEditingController.text,
                       'last_name': lastNameEditingController.text,
-                      'age': int.parse(ageEditingController.text),
+                      'age': int.tryParse(ageEditingController.text),
                       'password': passwordEditingController.text,
                       'photo_url': url,
                     });
+
                     setState(() {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -696,6 +699,7 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                       );
                     });
+                    //print(userAge);
                     return userAge;
                     // if (userAge != null) {
 

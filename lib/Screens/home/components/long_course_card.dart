@@ -1,3 +1,4 @@
+import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
@@ -82,7 +83,7 @@ class _LongCourseCardState extends State<LongCourseCard>
           color: widget.background,
           border: Border.all(
             color: Colors.white,
-            width: 10,
+            width: 1,
           ),
           boxShadow: [
             BoxShadow(
@@ -104,24 +105,30 @@ class _LongCourseCardState extends State<LongCourseCard>
             ),
             Text(
               widget.title,
-              style: AppStyle.m12w,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             Text(
               widget.subTitle,
               style: AppStyle.r10wt,
             ),
+            SizedBox(
+              height: 10,
+            ),
             IconButton(
+              iconSize: 70,
+              color: Colors.black,
               onPressed: widget.press,
               icon: Lottie.asset(
                 widget.image,
                 repeat: true,
                 animate: true,
                 controller: _controller,
-                onLoaded: (composition) {
-                  _controller
-                    ..duration = composition.duration
-                    ..forward();
-                },
               ),
             ),
           ],

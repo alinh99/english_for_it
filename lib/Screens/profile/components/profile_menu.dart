@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/colors.dart';
 
 class ProfileMenu extends StatelessWidget {
   const ProfileMenu({
@@ -23,7 +24,7 @@ class ProfileMenu extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          backgroundColor: const Color(0xFFF5F6F9),
+          backgroundColor: AppColors.red,
         ),
         onPressed: press,
         child: Row(

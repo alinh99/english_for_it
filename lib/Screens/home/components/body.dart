@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_eft/Screens/home/components/colors.dart';
+import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/Screens/home_details/home_details.dart';
 import 'package:flutter_eft/constants.dart';
 import 'package:flutter_eft/Screens/home/components/style.dart';
@@ -13,7 +13,6 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -24,7 +23,7 @@ class _BodyState extends State<Body> {
             height: widget.size.height - (widget.size.height / 4),
             width: widget.size.width,
             decoration: const BoxDecoration(
-              color: kBackgroundColor,
+              color: AppColors.red,
             ),
             child: SafeArea(
               child: Align(
@@ -64,7 +63,7 @@ class _BodyState extends State<Body> {
             height: widget.size.height - (widget.size.height / 3),
             width: widget.size.width,
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: AppColors.pink,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(34),
                 topRight: Radius.circular(34),
@@ -72,9 +71,11 @@ class _BodyState extends State<Body> {
             ),
             child: Expanded(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'All',
@@ -102,14 +103,14 @@ class _BodyState extends State<Body> {
                   Expanded(
                     flex: 3,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Expanded(
-                          flex: 2,
+                          flex: 1,
                           child: Column(
                             children: [
                               LongCourseCard(
-                                background: AppColors.pink,
+                                background: AppColors.red,
                                 title: "Listening Course",
                                 subTitle: "10 Units",
                                 image: ("assets/images/listening.json"),
@@ -125,8 +126,11 @@ class _BodyState extends State<Body> {
                                   );
                                 },
                               ),
+                              SizedBox(
+                                height: 20,
+                              ),
                               LongCourseCard(
-                                background: AppColors.pink,
+                                background: AppColors.red,
                                 title: "Writing Course",
                                 subTitle: "10 Units",
                                 image: ("assets/images/writing.json"),
@@ -145,12 +149,15 @@ class _BodyState extends State<Body> {
                             ],
                           ),
                         ),
+                        SizedBox(
+                          width: 20,
+                        ),
                         Expanded(
-                          flex: 2,
+                          flex: 1,
                           child: Column(
                             children: [
                               LongCourseCard(
-                                background: AppColors.pink,
+                                background: AppColors.red,
                                 title: "Reading Course",
                                 subTitle: "10 Units",
                                 image: ("assets/images/reading_2.json"),
@@ -166,8 +173,11 @@ class _BodyState extends State<Body> {
                                   );
                                 },
                               ),
+                              SizedBox(
+                                height: 20,
+                              ),
                               LongCourseCard(
-                                background: AppColors.pink,
+                                background: AppColors.red,
                                 title: "Speaking Course",
                                 subTitle: "10 Units",
                                 image: ("assets/images/speaking.json"),

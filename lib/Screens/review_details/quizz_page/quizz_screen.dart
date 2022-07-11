@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/Screens/review_details/quizz_page/components/next_button.dart';
 import 'package:flutter_eft/Screens/review_details/quizz_page/components/option_card.dart';
 import 'package:flutter_eft/Screens/review_details/quizz_page/components/question_widget.dart';
@@ -132,7 +133,7 @@ class _QuizzScreenState extends State<QuizzScreen> {
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10.0,
                   ),
-                  color: kBackgroundColor,
+                  color: AppColors.red,
                   width: double.infinity,
                   child: Column(
                     children: [
@@ -183,7 +184,7 @@ class _QuizzScreenState extends State<QuizzScreen> {
                                         true
                                     ? kCorrectAnswerColor
                                     : kIncorrectAnswerColor
-                                : kNeutralAnswerColor,
+                                : AppColors.pink,
                             //press: changeColor,
                           ),
                         ),

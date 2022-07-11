@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/Screens/home/home_screen.dart';
 import 'package:flutter_eft/Screens/models/users.dart';
 import 'package:flutter_eft/Screens/services/auth.dart';
@@ -127,44 +128,6 @@ class _SplashScreenState extends State<SplashScreen>
     });
   }
 
-  Future<String> uploadImage() async {
-    final _firebaseStorage = FirebaseStorage.instance;
-    final _imagePicker = ImagePicker();
-    PickedFile image;
-    //Check Permissions
-    await Permission.photos.request();
-
-    var permissionStatus = await Permission.photos.status;
-
-    if (permissionStatus.isGranted) {
-      //Select Image
-      image = await _imagePicker.getImage(source: ImageSource.gallery);
-      var file = File(image.path);
-
-      if (image != null) {
-        //Upload to Firebase
-        for (var i = 0; i < 1000000000; i++) {
-          var snapshot = await _firebaseStorage
-              .ref()
-              .child('images/imageName$i')
-              .putFile(file);
-          var downloadUrl = await snapshot.ref.getDownloadURL();
-
-          setState(() {
-            imageUrl = downloadUrl;
-          });
-        }
-        //print("downloadUrl: " + downloadUrl);
-        print("imageUrl: " + imageUrl);
-      } else {
-        print('No Image Path Received');
-      }
-    } else {
-      print('Permission not granted. Try Again with permission access');
-    }
-    return imageUrl;
-  }
-
   @override
   Widget build(BuildContext context) {
     windowHeight = MediaQuery.of(context).size.height;
@@ -183,7 +146,7 @@ class _SplashScreenState extends State<SplashScreen>
     }
     switch (_pageState) {
       case 0:
-        _backgroundColor = Colors.white;
+        _backgroundColor = AppColors.red;
         _headingColor = kGetStartedButtonColor;
         _headingTop = 100;
         _loginWidth = windowWidth;
@@ -196,7 +159,7 @@ class _SplashScreenState extends State<SplashScreen>
         _infoYOffset = windowHeight;
         break;
       case 1:
-        _backgroundColor = kBackgroundColor;
+        _backgroundColor = AppColors.red;
         _headingColor = Colors.white;
         _headingTop = 90;
         _loginWidth = windowWidth;
@@ -210,7 +173,7 @@ class _SplashScreenState extends State<SplashScreen>
         _infoYOffset = windowHeight;
         break;
       case 2:
-        _backgroundColor = kBackgroundColor;
+        _backgroundColor = AppColors.red;
         _headingColor = Colors.white;
         _headingTop = 100;
         _registerWidth = windowWidth;
@@ -227,7 +190,7 @@ class _SplashScreenState extends State<SplashScreen>
         _infoYOffset = windowHeight;
         break;
       case 3:
-        _backgroundColor = kBackgroundColor;
+        _backgroundColor = AppColors.red;
         _headingColor = Colors.white;
         _registerWidth = windowWidth - 40;
         _headingTop = 100;
@@ -246,7 +209,7 @@ class _SplashScreenState extends State<SplashScreen>
         _infoNextYOffset = windowHeight;
         break;
       case 4:
-        _backgroundColor = kBackgroundColor;
+        _backgroundColor = AppColors.red;
         _headingColor = Colors.white;
         _headingTop = 100;
         _infoWidth = windowWidth - 40;
@@ -572,7 +535,7 @@ class _SplashScreenState extends State<SplashScreen>
               },
               child: PrimaryButton(
                 btnText: textBtn,
-                backgroundColor: kBackgroundColor,
+                backgroundColor: AppColors.red,
                 colorTextStyle: Colors.white,
               ),
             ),

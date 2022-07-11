@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/colors.dart';
 
 BoxDecoration boxDecoration() {
   return BoxDecoration(
-    color: Colors.white,
+    color: AppColors.red,
     boxShadow: [
       BoxShadow(
         offset: const Offset(0, -15),
@@ -10,9 +11,9 @@ BoxDecoration boxDecoration() {
         color: const Color(0xFFDADADA).withOpacity(0.15),
       ),
     ],
-    borderRadius: const BorderRadius.only(
-      topLeft: Radius.circular(40),
-      topRight: Radius.circular(40),
-    ),
+    // borderRadius: const BorderRadius.only(
+    //   topLeft: Radius.circular(40),
+    //   topRight: Radius.circular(40),
+    // ),
   );
 }

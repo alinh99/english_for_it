@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_eft/constants.dart';
+import 'package:flutter_eft/colors.dart';
 
 class SeassionCard extends StatelessWidget {
   final int seassionNum;
@@ -22,7 +22,7 @@ class SeassionCard extends StatelessWidget {
               10, // constraint.maxWidth provide us the available with for this widget
           // padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: kBackgroundColor,
+            color: AppColors.red,
             borderRadius: BorderRadius.circular(13),
             // ignore: prefer_const_literals_to_create_immutables
             boxShadow: [
@@ -30,7 +30,7 @@ class SeassionCard extends StatelessWidget {
                 offset: Offset(0, 17),
                 blurRadius: 23,
                 spreadRadius: -13,
-                color: kBackgroundColor,
+                color: AppColors.red,
               ),
             ],
           ),
@@ -46,13 +46,13 @@ class SeassionCard extends StatelessWidget {
                       height: 42,
                       width: 43,
                       decoration: BoxDecoration(
-                        color: isDone ? kBackgroundColor : Colors.white,
+                        color: isDone ? AppColors.red : Colors.white,
                         shape: BoxShape.circle,
-                        border: Border.all(color: kBackgroundColor),
+                        border: Border.all(color: AppColors.red),
                       ),
                       child: Icon(
                         Icons.play_arrow,
-                        color: isDone ? Colors.white : kBackgroundColor,
+                        color: isDone ? Colors.white : AppColors.red,
                       ),
                     ),
                     const SizedBox(

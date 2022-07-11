@@ -24,13 +24,13 @@ class DatabaseService {
     });
   }
 
-  Future updateUserPassword(password) async {
+  Future updateUserPassword(String password) async {
     return await userCollection.doc(uid).set({
       'password': password,
     });
   }
 
-  Future updateUserFirstName(firstNameEditingController) async {
+  Future updateUserFirstName(String firstNameEditingController) async {
     try {
       final userName = await userCollection.doc(uid).set({
         'first_name': firstNameEditingController,
@@ -42,7 +42,7 @@ class DatabaseService {
     }
   }
 
-  Future updateUserLastName(lastNameEditingController) async {
+  Future updateUserLastName(String lastNameEditingController) async {
     try {
       final userName = await userCollection.doc(uid).set({
         'lastName': lastNameEditingController,
@@ -55,11 +55,11 @@ class DatabaseService {
   }
 
   Future updateUserAge(
-    ageEditingController,
+    int age,
   ) async {
     try {
       final userAge = await userCollection.doc(uid).set({
-        'age': ageEditingController.text,
+        'age': age.toString(),
       });
       return userAge;
     } catch (e) {
@@ -68,7 +68,7 @@ class DatabaseService {
     }
   }
 
-  Future updateUserData(String password, String firstName, String lastName,
+  Future updateUserData(String firstName, String lastName, String password,
       int age, String image) async {
     return await userCollection.doc(uid).set({
       'first_name': firstName,
@@ -76,6 +76,16 @@ class DatabaseService {
       'password': password,
       'age': age,
       'photo_url': image,
+    });
+  }
+
+  Future update(
+      String password, String firstName, String lastName, int age) async {
+    return await userCollection.doc(uid).update({
+      'first_name': firstName,
+      'last_name': lastName,
+      'password': password,
+      'age': age,
     });
   }
 

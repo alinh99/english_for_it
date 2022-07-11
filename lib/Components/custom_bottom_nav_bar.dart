@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/review_details/review_details_screen.dart';
+import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/constants.dart';
 import 'package:flutter_eft/screens/home/home_screen.dart';
 import 'package:flutter_eft/screens/profile/profile_screen.dart';
@@ -30,7 +31,7 @@ class CustomBottomNavBar extends StatelessWidget {
                   CupertinoIcons.home,
                 ),
                 color: MenuState.home == selectedMenu
-                    ? kBackgroundColor
+                    ? AppColors.pink
                     : kInActiveIconColor,
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
@@ -46,7 +47,7 @@ class CustomBottomNavBar extends StatelessWidget {
                   CupertinoIcons.pencil_ellipsis_rectangle,
                 ),
                 color: MenuState.review == selectedMenu
-                    ? kBackgroundColor
+                    ? AppColors.pink
                     : kInActiveIconColor,
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
@@ -60,7 +61,7 @@ class CustomBottomNavBar extends StatelessWidget {
               IconButton(
                 icon: const Icon(CupertinoIcons.person),
                 color: MenuState.profile == selectedMenu
-                    ? kBackgroundColor
+                    ? AppColors.pink
                     : kInActiveIconColor,
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(

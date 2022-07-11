@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/constants.dart';
 
 class NextButton extends StatelessWidget {
@@ -9,7 +10,7 @@ class NextButton extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: kNeutralAnswerColor,
+        color: AppColors.pink,
         borderRadius: BorderRadius.circular(10.0),
       ),
       padding: const EdgeInsets.symmetric(vertical: 16.0),

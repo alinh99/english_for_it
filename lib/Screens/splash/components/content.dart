@@ -19,10 +19,6 @@ class _ContentState extends State<Content> {
         "assets/images/people.json",
         height: widget.windowHeight,
         controller: widget.controller,
-        onLoaded: (composition) {
-          widget.controller.duration = composition.duration;
-          widget.controller.forward();
-        },
         repeat: true,
         animate: true,
       ),

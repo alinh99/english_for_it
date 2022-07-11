@@ -21,7 +21,7 @@ class OptionCard extends StatelessWidget {
           style: TextStyle(
             fontSize: 18.0,
             color:
-                colour.red != colour.green ? kNeutralAnswerColor : Colors.black,
+                colour.red != colour.green ? Colors.black : kNeutralAnswerColor,
           ),
         ),
       ),

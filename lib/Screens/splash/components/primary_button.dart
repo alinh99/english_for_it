@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/constants.dart';
 
 class PrimaryButton extends StatefulWidget {
@@ -19,7 +20,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         border: Border.all(
-          color: kBackgroundColor,
+          color: AppColors.red,
           width: 2,
         ),
         color: widget.backgroundColor,

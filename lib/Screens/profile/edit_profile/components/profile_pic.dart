@@ -1,10 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_eft/Screens/services/database.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_eft/Screens/services/storage.dart';
 
 class ProfilePic extends StatefulWidget {
   ProfilePic({Key key, this.avatarUrl, this.isSaved, this.editingController})

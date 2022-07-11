@@ -1,6 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/models/users.dart';
@@ -8,7 +5,7 @@ import 'package:flutter_eft/Screens/profile/edit_profile/edit_profile_screen.dar
 import 'package:flutter_eft/Screens/services/auth.dart';
 import 'package:flutter_eft/Screens/services/database.dart';
 import 'package:flutter_eft/Screens/splash/splash_screen.dart';
-import 'package:flutter_eft/constants.dart';
+import 'package:flutter_eft/colors.dart';
 import 'package:provider/provider.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
@@ -51,7 +48,7 @@ class _BodyState extends State<Body> {
           height: widget.size.height - (widget.size.height / 5),
           width: widget.size.width,
           decoration: const BoxDecoration(
-            color: kBackgroundColor,
+            color: AppColors.red,
           ),
           padding: const EdgeInsets.only(
             left: 24,
@@ -74,7 +71,6 @@ class _BodyState extends State<Body> {
                   ),
                   Expanded(
                     child: Column(
-                      // ignore: prefer_const_literals_to_create_immutables
                       children: [
                         Align(
                           child: Expanded(
@@ -84,10 +80,6 @@ class _BodyState extends State<Body> {
                                 Users userData = snapshot.data;
 
                                 if (snapshot.hasData) {
-                                  // setState(() {
-                                  //   isSaved = false;
-                                  // });
-                                  // if(isSaved == false) {}
                                   return ProfilePic(
                                     avatarUrl: userData.photoUrl,
                                   );
@@ -102,12 +94,6 @@ class _BodyState extends State<Body> {
                           ),
                           alignment: Alignment.center,
                         ),
-                        // Align(
-                        //   child: Expanded(
-                        //     child: Text(user.displayName),
-                        //   ),
-                        //   alignment: Alignment.center,
-                        // ),
                       ],
                     ),
                   ),
@@ -123,7 +109,7 @@ class _BodyState extends State<Body> {
             height: widget.size.height - (widget.size.height / 2.5),
             width: widget.size.width,
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: AppColors.pink,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(34),
                 topRight: Radius.circular(34),
@@ -132,7 +118,6 @@ class _BodyState extends State<Body> {
             child: Expanded(
               child: Column(
                 children: [
-                  //SizedBox(height: 20),
                   Expanded(
                     child: ProfileMenu(
                       text: "My Account",

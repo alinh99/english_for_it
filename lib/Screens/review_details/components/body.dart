@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/Screens/home/components/style.dart';
 import 'package:flutter_eft/Screens/review_details/components/reuseable_card.dart';
 import 'package:flutter_eft/Screens/review_details/quizz_page/quizz_screen.dart';
@@ -20,7 +21,7 @@ class Body extends StatelessWidget {
           height: size.height - (size.height / 4),
           width: size.width,
           decoration: const BoxDecoration(
-            color: kBackgroundColor,
+            color: AppColors.red,
           ),
           padding: const EdgeInsets.only(
             left: 24,
@@ -74,7 +75,7 @@ class Body extends StatelessWidget {
             height: size.height - (size.height / 3),
             width: size.width,
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: AppColors.pink,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(34),
                 topRight: Radius.circular(34),
@@ -85,7 +86,7 @@ class Body extends StatelessWidget {
               children: [
                 Expanded(
                   child: ReuseableCard(
-                    colour: kBackgroundColor,
+                    colour: AppColors.red,
                     cardChild: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -114,7 +115,7 @@ class Body extends StatelessWidget {
                 ),
                 Expanded(
                   child: ReuseableCard(
-                    colour: kBackgroundColor,
+                    colour: AppColors.red,
                     cardChild: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -133,7 +134,7 @@ class Body extends StatelessWidget {
                 ),
                 Expanded(
                   child: ReuseableCard(
-                    colour: kBackgroundColor,
+                    colour: AppColors.red,
                     cardChild: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

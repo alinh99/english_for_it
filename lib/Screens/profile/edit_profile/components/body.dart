@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/Screens/models/users.dart';
 import 'package:flutter_eft/Screens/services/database.dart';
 import 'package:flutter_eft/Screens/services/storage.dart';
@@ -23,10 +24,8 @@ class _BodyState extends State<Body> {
   bool loading = false;
   bool isHover = false;
   bool isPlaceHolder = false;
-  // bool _isLoading  = false;
   @override
   void initState() {
-    //_getUserData();
     super.initState();
   }
 
@@ -40,10 +39,6 @@ class _BodyState extends State<Body> {
   String userImage;
   Users users = Users();
   final Storage _storage = Storage();
-  // final _formKeyFirstName = GlobalKey<FormState>();
-  // final _formKeyLastName = GlobalKey<FormState>();
-  // final _formKeyAge = GlobalKey<FormState>();
-  // final _formKeyPassword = GlobalKey<FormState>();
   final _formKey = GlobalKey<FormState>();
   AnimationController controller;
   final TextEditingController _firstName = TextEditingController();
@@ -84,7 +79,7 @@ class _BodyState extends State<Body> {
           height: widget.size.height - (widget.size.height / 5),
           width: widget.size.width,
           decoration: const BoxDecoration(
-            color: kBackgroundColor,
+            color: AppColors.red,
           ),
           padding: const EdgeInsets.only(
             left: 24,
@@ -112,10 +107,6 @@ class _BodyState extends State<Body> {
                       children: [
                         Align(
                           child: Expanded(
-                            // child: ProfilePic(
-                            //   isSaved: isSaved,
-                            //   avatarUrl: userImage,
-                            // ),
                             child: StreamBuilder(
                               stream: DatabaseService(uid: user.uid).userData,
                               builder: (context, snapshot) {
@@ -155,7 +146,7 @@ class _BodyState extends State<Body> {
               height: widget.size.height - (widget.size.height / 2.5),
               width: widget.size.width,
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: AppColors.pink,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(34),
                   topRight: Radius.circular(34),
@@ -256,12 +247,13 @@ class _BodyState extends State<Body> {
                                                   await DatabaseService(
                                                           uid: user.uid)
                                                       .updateUserData(
-                                                    _password.text ??
-                                                        userData.password,
-                                                    _firstName.text ??
+                                                    _firstName.text
+                                                            .toString() ??
                                                         userData.firstName,
-                                                    _lastName.text ??
+                                                    _lastName.text.toString() ??
                                                         userData.lastName,
+                                                    _password.text.toString() ??
+                                                        userData.password,
                                                     int.tryParse(_age.text) ??
                                                         userData.age,
                                                     url ?? userData.photoUrl,
@@ -272,7 +264,7 @@ class _BodyState extends State<Body> {
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 50),
-                                              color: kBackgroundColor,
+                                              color: AppColors.red,
                                               elevation: 2,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
@@ -328,9 +320,9 @@ class _BodyState extends State<Body> {
       obscureText: isPasswordTextField ? _showPassword : false,
       decoration: InputDecoration(
         focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: kBackgroundColor),
+          borderSide: BorderSide(color: AppColors.red),
         ),
-        iconColor: kBackgroundColor,
+        iconColor: AppColors.red,
         suffixIcon: isPasswordTextField
             ? IconButton(
                 onPressed: () {
@@ -341,17 +333,17 @@ class _BodyState extends State<Body> {
                 icon: _showPassword == false
                     ? const Icon(
                         Icons.remove_red_eye,
-                        color: kBackgroundColor,
+                        color: AppColors.red,
                       )
                     : const Icon(Icons.remove_red_eye_outlined,
-                        color: kBackgroundColor),
+                        color: AppColors.red),
               )
             : null,
         contentPadding: const EdgeInsets.only(bottom: 3),
         labelText: labelText,
         floatingLabelBehavior: FloatingLabelBehavior.always,
         hintText: val,
-        labelStyle: const TextStyle(color: kBackgroundColor),
+        labelStyle: const TextStyle(color: AppColors.red),
         hintStyle: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
@@ -380,9 +372,9 @@ class _BodyState extends State<Body> {
           obscureText: isPasswordTextField ? _showPassword : false,
           decoration: InputDecoration(
             focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBackgroundColor),
+              borderSide: BorderSide(color: AppColors.red),
             ),
-            iconColor: kBackgroundColor,
+            iconColor: AppColors.red,
             suffixIcon: isPasswordTextField
                 ? IconButton(
                     onPressed: () {
@@ -393,17 +385,17 @@ class _BodyState extends State<Body> {
                     icon: _showPassword == false
                         ? const Icon(
                             Icons.remove_red_eye,
-                            color: kBackgroundColor,
+                            color: AppColors.red,
                           )
                         : const Icon(Icons.remove_red_eye_outlined,
-                            color: kBackgroundColor),
+                            color: AppColors.red),
                   )
                 : null,
             contentPadding: const EdgeInsets.only(bottom: 3),
             labelText: labelText,
             floatingLabelBehavior: FloatingLabelBehavior.always,
             hintText: val,
-            labelStyle: const TextStyle(color: kBackgroundColor),
+            labelStyle: const TextStyle(color: AppColors.red),
             hintStyle: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,

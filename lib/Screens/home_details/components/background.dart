@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/constants.dart';
 
 class Background extends StatelessWidget {
@@ -14,10 +15,10 @@ class Background extends StatelessWidget {
         Align(
           alignment: Alignment.topCenter,
           child: Container(
-            height: size.height - (size.height / 5),
+            height: size.height - (size.height / 4),
             width: size.width,
             decoration: const BoxDecoration(
-              color: kBackgroundColor,
+              color: AppColors.red,
             ),
           ),
         ),

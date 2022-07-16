@@ -2,17 +2,24 @@ import 'package:flutter/material.dart';
 
 class TableData extends StatelessWidget {
   const TableData({
+    this.answerTitleTable,
+    this.question,
+    this.questionTitleTable,
     Key key,
   }) : super(key: key);
-
+  final String questionTitleTable;
+  final String answerTitleTable;
+  final String question;
   @override
   Widget build(BuildContext context) {
+    TextEditingController answer = TextEditingController();
+    GlobalKey<FormState> _form = GlobalKey<FormState>();
     return DataTable(
       columns: [
         DataColumn(
           label: Text(
-            'User',
-            style: TextStyle(
+            questionTitleTable,
+            style: const TextStyle(
               fontSize: 14,
               height: 1.5,
             ),
@@ -20,8 +27,8 @@ class TableData extends StatelessWidget {
         ),
         DataColumn(
           label: Text(
-            'Actual Use',
-            style: TextStyle(
+            answerTitleTable,
+            style: const TextStyle(
               fontSize: 14,
               height: 1.5,
             ),
@@ -33,16 +40,16 @@ class TableData extends StatelessWidget {
           cells: [
             DataCell(
               Text(
-                'primary school teacher',
-                style: TextStyle(
+                question,
+                style: const TextStyle(
                   fontSize: 14,
                 ),
               ),
             ),
             DataCell(
               Text(
-                '',
-                style: TextStyle(
+                answer.text,
+                style: const TextStyle(
                   fontSize: 14,
                 ),
               ),
@@ -53,16 +60,18 @@ class TableData extends StatelessWidget {
           cells: [
             DataCell(
               Text(
-                'open university student',
-                style: TextStyle(
+                question,
+                style: const TextStyle(
                   fontSize: 14,
                 ),
               ),
             ),
             DataCell(
               Text(
-                '',
-                style: TextStyle(fontSize: 14),
+                answer.text,
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
               ),
             ),
           ],
@@ -71,14 +80,18 @@ class TableData extends StatelessWidget {
           cells: [
             DataCell(
               Text(
-                'girl (Louise), aged 6',
-                style: TextStyle(fontSize: 14),
+                question,
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
               ),
             ),
             DataCell(
               Text(
-                '',
-                style: TextStyle(fontSize: 14),
+                answer.text,
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
               ),
             ),
           ],
@@ -87,15 +100,32 @@ class TableData extends StatelessWidget {
           cells: [
             DataCell(
               Text(
-                'artist',
-                style: TextStyle(fontSize: 14),
+                question,
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
               ),
             ),
             DataCell(
-              Text(
-                '',
-                style: TextStyle(fontSize: 14),
-              ),
+              Form(
+                  key: _form,
+                  child: TextFormField(
+                    controller: answer,
+                    onChanged: (value) {
+                      value = answer.text;
+                    },
+                    decoration: const InputDecoration(
+                      hintText: "Type your answer here",
+                    ),
+                  )
+                  // answer.text,
+                  // style: TextStyle(fontSize: 14),
+                  ),
+              onTap: () {
+                if (_form.currentState.validate()) {
+                  print("worked");
+                }
+              },
             ),
           ],
         ),

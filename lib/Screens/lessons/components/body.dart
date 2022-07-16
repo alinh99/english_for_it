@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/Screens/lessons/models/lesson.dart';
+import 'package:flutter_eft/Screens/lessons/models/lesson_db.dart';
 import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/Screens/lessons/components/question_list.dart';
 import 'package:flutter_eft/Screens/lessons/components/table_data.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_eft/constants.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -18,6 +21,15 @@ class _BodyState extends State<Body> {
   bool isPlayed = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
+  LessonDB db = LessonDB();
+  //Future _lessons;
+  //Lesson lesson = Lesson();
+  DatabaseReference lessonRef;
+
+  int i = 0;
+  int score = 0;
+  bool isPressed = false;
+  bool isSelected = false;
   @override
   void initState() {
     // Listen to States: Playing, Pause, Stop
@@ -37,9 +49,13 @@ class _BodyState extends State<Body> {
         position = newPosition;
       });
     });
-
+    lessonRef = FirebaseDatabase.instance.reference().child('lesson').child('');
     super.initState();
   }
+
+  // Future<List<Lesson>> getData() async {
+  //   return db.fetchLessonDB();
+  // }
 
   Future setAudio() async {
     audioPlayer.setReleaseMode(ReleaseMode.LOOP);
@@ -52,13 +68,14 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     // double _width = MediaQuery.of(context).size.width;
     // double _height = MediaQuery.of(context).size.height;
+    var lessons = <Lesson>[];
     return SingleChildScrollView(
       child: Stack(
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
-                image: const AssetImage("assets/database/less_back_ver2.png"),
+                image: AssetImage("assets/database/less_back_ver2.png"),
                 fit: BoxFit.cover,
                 colorFilter:
                     ColorFilter.mode(AppColors.demo2, BlendMode.modulate),
@@ -149,7 +166,7 @@ class _BodyState extends State<Body> {
             alignment: Alignment.topCenter,
             margin: EdgeInsets.only(top: widget.size.height * 0.4),
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               //color: AppColors.pink,
               image: DecorationImage(
                 image: AssetImage("assets/database/less_v2.png"),
@@ -166,7 +183,7 @@ class _BodyState extends State<Body> {
               padding: const EdgeInsets.all(30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+                children: [
                   Align(
                     child: Container(
                       width: 150,
@@ -177,37 +194,83 @@ class _BodyState extends State<Body> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text(
-                    "Now listen to the recordings and note the actual uses described.",
-                    style: TextStyle(
-                      fontSize: 20,
-                      height: 1.5,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TableData(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text(
-                    "Now listen to the recordings again to find the answers to these questions:",
-                    style: TextStyle(fontSize: 20, height: 1.5),
-                  ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: ListView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      children: [
-                        QuestionList(),
-                      ],
-                    ),
+                  StreamBuilder(
+                    stream: lessonRef != null ? lessonRef.onValue : null,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && !snapshot.hasError) {
+                        var event = snapshot.data as DatabaseEvent;
+                        var snapshot2 = event.snapshot.value;
+                        if (snapshot2 == null) {
+                          return const Center(
+                            child: Text('No Tasks Added Yet'),
+                          );
+                        }
+                        Map<String, dynamic> map =
+                            Map<String, dynamic>.from(snapshot2);
+
+                        for (var taskMap in map.values) {
+                          Lesson lessonModel = Lesson.fromMap(
+                              Map<String, dynamic>.from(taskMap));
+
+                          lessons.add(lessonModel);
+                        }
+
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: ListView.builder(
+                              itemCount: lessons.length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                Lesson lesson = lessons[index];
+                                print('title: $lesson.title');
+                                return Column(
+                                  children: [
+                                    Text(
+                                      lesson.title,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        height: 1.5,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    QuestionList(
+                                      index: index,
+                                      question: lesson.question,
+                                    ),
+                                  ],
+                                );
+                              }),
+                        );
+                      } else {
+                        return SafeArea(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: const [
+                                CircularProgressIndicator(),
+                                // SizedBox(
+                                //   height: 20.0,
+                                // ),
+                                Text(
+                                  "Please Wait while Questions are loading..",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    // color: kNeutralAnswerColor,
+                                    decoration: TextDecoration.none,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                    },
                   ),
                   SizedBox(
                     height: 20,
@@ -269,11 +332,11 @@ class _BodyState extends State<Body> {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

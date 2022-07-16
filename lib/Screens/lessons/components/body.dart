@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/lessons/models/lesson.dart';
 import 'package:flutter_eft/Screens/lessons/models/lesson_db.dart';
+import 'package:flutter_eft/Screens/review_details/quizz_page/components/next_button.dart';
 import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/Screens/lessons/components/question_list.dart';
 import 'package:flutter_eft/Screens/lessons/components/table_data.dart';
@@ -53,10 +54,6 @@ class _BodyState extends State<Body> {
     super.initState();
   }
 
-  // Future<List<Lesson>> getData() async {
-  //   return db.fetchLessonDB();
-  // }
-
   Future setAudio() async {
     audioPlayer.setReleaseMode(ReleaseMode.LOOP);
     final player = AudioCache(prefix: 'assets/database/');
@@ -66,8 +63,6 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    // double _width = MediaQuery.of(context).size.width;
-    // double _height = MediaQuery.of(context).size.height;
     var lessons = <Lesson>[];
     return SingleChildScrollView(
       child: Stack(
@@ -223,18 +218,18 @@ class _BodyState extends State<Body> {
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 Lesson lesson = lessons[index];
-                                print('title: $lesson.title');
+                                //print('title: $lesson.title');
                                 return Column(
                                   children: [
                                     Text(
                                       lesson.title,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 20,
                                         height: 1.5,
                                         color: Colors.black,
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 20,
                                     ),
                                     QuestionList(
@@ -272,7 +267,11 @@ class _BodyState extends State<Body> {
                       }
                     },
                   ),
-                  SizedBox(
+                  GestureDetector(
+                    child: const NextButton(),
+                    onTap: () {},
+                  ),
+                  const SizedBox(
                     height: 20,
                   ),
                   SingleChildScrollView(

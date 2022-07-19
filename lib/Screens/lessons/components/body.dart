@@ -22,7 +22,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   AudioPlayer audioPlayer = AudioPlayer();
-  List<TextEditingController> answer = [];
+  List<TextEditingController> userAnswerType = [];
   //TextEditingController answerController = TextEditingController();
   bool isPlayed = false;
   Duration duration = Duration.zero;
@@ -37,7 +37,8 @@ class _BodyState extends State<Body> {
   bool isSelected = false;
   bool isCorrected = false;
   Icon icon;
-  List<String> answers = [];
+  List<String> userAnswerList = [];
+  List<String> realAnswerList = [];
   void startOver() {
     setState(() {
       ind = 0;
@@ -97,7 +98,6 @@ class _BodyState extends State<Body> {
     }
   }
 
-  //Lesson _lesson;
   @override
   void initState() {
     // Listen to States: Playing, Pause, Stop
@@ -117,14 +117,13 @@ class _BodyState extends State<Body> {
         position = newPosition;
       });
     });
-    //answer.text = _lesson.answer.;
     lessonRef = FirebaseDatabase.instance.reference().child('lesson').child('');
     super.initState();
   }
 
   @override
   void dispose() {
-    answer[ind].dispose();
+    userAnswerType[ind].dispose();
     super.dispose();
   }
 
@@ -159,7 +158,6 @@ class _BodyState extends State<Body> {
                   horizontal: 30,
                 ),
                 child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     InkWell(
@@ -170,7 +168,6 @@ class _BodyState extends State<Body> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      //crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         SvgPicture.asset("assets/images/heart_icon.svg"),
                         const SizedBox(
@@ -290,11 +287,8 @@ class _BodyState extends State<Body> {
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              answer.add(TextEditingController());
+                              userAnswerType.add(TextEditingController());
                               Lesson lesson = lessons[index];
-                              // print(
-                              //     "answer: ${lesson.answer.keys.toList()[i]}");
-                              //print('title: $lesson.title');
                               return Column(
                                 children: [
                                   Text(
@@ -313,13 +307,14 @@ class _BodyState extends State<Body> {
                                     question: lesson.question,
                                   ),
                                   TextField(
-                                    controller: answer[index],
+                                    controller: userAnswerType[index],
                                     decoration: const InputDecoration(
                                         hintText: 'Input your answer'),
                                     onChanged: (value) {
-                                      value = answer[index].text;
+                                      value = userAnswerType[index].text;
                                     },
                                   ),
+                                  Text(realAnswerList[index])
                                 ],
                               );
                             },
@@ -359,21 +354,27 @@ class _BodyState extends State<Body> {
                     child: NextButton(),
                     onTap: () {
                       for (int i = 0; i < lessons.length; i++) {
-                        answers.insert(i, "(${answer[i].text})");
-                        print(answers);
+                        userAnswerList.insert(i, "(${userAnswerType[i].text})");
+                        print(userAnswerList);
                         print("Answer Key: ${lessons[i].answer.keys}");
-                        print("User Answer: ${answer[i].text}");
-                        if (answers.isEmpty) {
+                        print("User Answer: ${userAnswerType[i].text}");
+                        if (userAnswerList.isEmpty) {
                           print("null list");
                           //return Text("null list");
                         } else {
-                          if (answers[i].toLowerCase().toString() ==
+                          if (userAnswerList[i].toLowerCase().toString() ==
                               lessons[i].answer.keys.toString()) {
                             print("Results: true");
                             //return Text("true");
                           } else {
                             print("Results: false");
                             //return Text("false");
+                            realAnswerList
+                                .add(lessons[i].answer.keys.toString());
+                            print("AnswerKey List: $realAnswerList");
+                            // setState(() {
+                            //   answerKey[i] = lessons[i].answer.keys.toString();
+                            // });
                           }
                         }
                       }

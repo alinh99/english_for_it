@@ -11,10 +11,20 @@ class QuestionList extends StatelessWidget {
   final String question;
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        '${index + 1}. $question',
-        style: const TextStyle(fontSize: 14),
+    return Card(
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: Colors.white,
+        ),
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: ListTile(
+        title: Text(
+          '${index + 1}. $question',
+          style: const TextStyle(
+            fontSize: 14,
+          ),
+        ),
       ),
     );
   }

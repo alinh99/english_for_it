@@ -52,6 +52,7 @@ dependencies:
   transparent_image: ^2.0.0
   audioplayers: ^0.20.1
   firebase_database: ^9.0.19
+  fluttertoast: ^8.0.8
 
 dev_dependencies:
   flutter_test:

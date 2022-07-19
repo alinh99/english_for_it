@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/Screens/lessons/components/result_box.dart';
 import 'package:flutter_eft/Screens/lessons/models/lesson.dart';
 import 'package:flutter_eft/Screens/lessons/models/lesson_db.dart';
-import 'package:flutter_eft/Screens/review_details/quizz_page/components/next_button.dart';
+import 'package:flutter_eft/Screens/lessons/components/next_button.dart';
 import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/Screens/lessons/components/question_list.dart';
 import 'package:flutter_eft/Screens/lessons/components/table_data.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_eft/constants.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,18 +22,82 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   AudioPlayer audioPlayer = AudioPlayer();
+  List<TextEditingController> answer = [];
+  //TextEditingController answerController = TextEditingController();
   bool isPlayed = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
   LessonDB db = LessonDB();
   //Future _lessons;
-  //Lesson lesson = Lesson();
+  Lesson _lesson = Lesson();
   DatabaseReference lessonRef;
-
-  int i = 0;
+  int ind = 0;
   int score = 0;
   bool isPressed = false;
   bool isSelected = false;
+  bool isCorrected = false;
+  Icon icon;
+  List<String> answers = [];
+  void startOver() {
+    setState(() {
+      ind = 0;
+      score = 0;
+      isPressed = false;
+      isSelected = false;
+    });
+    Navigator.pop(context);
+  }
+
+  void nextQuestion(int questionLength) {
+    if (ind == questionLength - 1) {
+      showDialog(
+        context: context,
+        barrierDismissible:
+            false, // disable dismiss function on clicking outside of box
+        builder: (ctx) => ResultBox(
+          result: score,
+          questionLength: questionLength,
+          press: startOver,
+        ),
+      );
+    } else {
+      if (isPressed) {
+        setState(
+          () {
+            ind++;
+            isPressed = false;
+            isSelected = false;
+          },
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select any option'),
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.symmetric(vertical: 20),
+          ),
+        );
+      }
+    }
+  }
+
+  void checkAnswerAndUpdate(bool value) {
+    if (isSelected) {
+      return;
+    } else {
+      if (value) {
+        score++;
+      }
+      setState(
+        () {
+          isPressed = true;
+          isSelected = true;
+        },
+      );
+    }
+  }
+
+  //Lesson _lesson;
   @override
   void initState() {
     // Listen to States: Playing, Pause, Stop
@@ -50,8 +117,15 @@ class _BodyState extends State<Body> {
         position = newPosition;
       });
     });
+    //answer.text = _lesson.answer.;
     lessonRef = FirebaseDatabase.instance.reference().child('lesson').child('');
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    answer[ind].dispose();
+    super.dispose();
   }
 
   Future setAudio() async {
@@ -209,36 +283,47 @@ class _BodyState extends State<Body> {
 
                           lessons.add(lessonModel);
                         }
-
                         return SingleChildScrollView(
                           scrollDirection: Axis.vertical,
                           child: ListView.builder(
-                              itemCount: lessons.length,
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                Lesson lesson = lessons[index];
-                                //print('title: $lesson.title');
-                                return Column(
-                                  children: [
-                                    Text(
-                                      lesson.title,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        height: 1.5,
-                                        color: Colors.black,
-                                      ),
+                            itemCount: lessons.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              answer.add(TextEditingController());
+                              Lesson lesson = lessons[index];
+                              // print(
+                              //     "answer: ${lesson.answer.keys.toList()[i]}");
+                              //print('title: $lesson.title');
+                              return Column(
+                                children: [
+                                  Text(
+                                    lesson.title,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      height: 1.5,
+                                      color: Colors.black,
                                     ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    QuestionList(
-                                      index: index,
-                                      question: lesson.question,
-                                    ),
-                                  ],
-                                );
-                              }),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  QuestionList(
+                                    index: index,
+                                    question: lesson.question,
+                                  ),
+                                  TextField(
+                                    controller: answer[index],
+                                    decoration: const InputDecoration(
+                                        hintText: 'Input your answer'),
+                                    onChanged: (value) {
+                                      value = answer[index].text;
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
                         );
                       } else {
                         return SafeArea(
@@ -267,9 +352,32 @@ class _BodyState extends State<Body> {
                       }
                     },
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   GestureDetector(
-                    child: const NextButton(),
-                    onTap: () {},
+                    child: NextButton(),
+                    onTap: () {
+                      for (int i = 0; i < lessons.length; i++) {
+                        answers.insert(i, "(${answer[i].text})");
+                        print(answers);
+                        print("Answer Key: ${lessons[i].answer.keys}");
+                        print("User Answer: ${answer[i].text}");
+                        if (answers.isEmpty) {
+                          print("null list");
+                          //return Text("null list");
+                        } else {
+                          if (answers[i].toLowerCase().toString() ==
+                              lessons[i].answer.keys.toString()) {
+                            print("Results: true");
+                            //return Text("true");
+                          } else {
+                            print("Results: false");
+                            //return Text("false");
+                          }
+                        }
+                      }
+                    },
                   ),
                   const SizedBox(
                     height: 20,

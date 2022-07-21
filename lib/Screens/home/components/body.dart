@@ -3,7 +3,6 @@ import 'package:flutter_eft/Screens/home_details/listening/listening_screen.dart
 import 'package:flutter_eft/Screens/home_details/reading/reading_screen.dart';
 import 'package:flutter_eft/Screens/home_details/speaking/speaking_screen.dart';
 import 'package:flutter_eft/Screens/home_details/writing/writing_screen.dart';
-import 'package:flutter_eft/Screens/lessons/listening/lesson_listening_screen.dart';
 import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/Screens/home/components/style.dart';
 import 'package:flutter_eft/Screens/home/components/long_course_card.dart';

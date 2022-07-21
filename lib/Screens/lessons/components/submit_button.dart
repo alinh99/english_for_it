@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/constants.dart';
 
-class NextButton extends StatelessWidget {
-  const NextButton({Key key}) : super(key: key);
+class SubmitButton extends StatelessWidget {
+  const SubmitButton({Key key}) : super(key: key);
 
   //const NextButton({Key key}) : super(key: key);
 

@@ -3,7 +3,7 @@ import 'package:flutter_eft/Screens/lessons/components/answer_list.dart';
 import 'package:flutter_eft/Screens/lessons/components/result_box.dart';
 import 'package:flutter_eft/Screens/lessons/models/lesson.dart';
 import 'package:flutter_eft/Screens/lessons/models/lesson_db.dart';
-import 'package:flutter_eft/Screens/lessons/components/next_button.dart';
+import 'package:flutter_eft/Screens/lessons/components/submit_button.dart';
 import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/Screens/lessons/components/question_list.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -76,7 +76,7 @@ class _BodyState extends State<Body> {
     Navigator.pop(context);
   }
 
-  void nextQuestion(int questionLength) {
+  void submit(int questionLength) {
     showDialog(
       context: context,
       barrierDismissible:
@@ -351,13 +351,13 @@ class _BodyState extends State<Body> {
                     height: 20,
                   ),
                   GestureDetector(
-                    child: const NextButton(),
+                    child: const SubmitButton(),
                     onTap: () {
                       int i;
                       for (i = 0; i < lessons.toSet().toList().length; i++) {
                         checkAnswer(i);
                       }
-                      nextQuestion(i);
+                      submit(i);
                     },
                   ),
                   const SizedBox(

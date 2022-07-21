@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/lessons/components/body.dart';
 
-class LessonScreen extends StatefulWidget {
-  const LessonScreen({Key key}) : super(key: key);
+class Lesson extends StatefulWidget {
+  const Lesson({Key key}) : super(key: key);
 
   @override
-  _LessonScreenState createState() => _LessonScreenState();
+  _LessonState createState() => _LessonState();
 }
 
-class _LessonScreenState extends State<LessonScreen> {
+class _LessonState extends State<Lesson> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Body(size: size),
     );

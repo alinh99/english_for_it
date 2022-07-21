@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/Screens/lessons/components/answer_list.dart';
 import 'package:flutter_eft/Screens/lessons/components/result_box.dart';
 import 'package:flutter_eft/Screens/lessons/models/lesson.dart';
 import 'package:flutter_eft/Screens/lessons/models/lesson_db.dart';
 import 'package:flutter_eft/Screens/lessons/components/next_button.dart';
 import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/Screens/lessons/components/question_list.dart';
-import 'package:flutter_eft/Screens/lessons/components/table_data.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_eft/constants.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,80 +20,75 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   AudioPlayer audioPlayer = AudioPlayer();
-  List<TextEditingController> userAnswerType = [];
+  List<TextEditingController> userAnswerTypes = [];
   //TextEditingController answerController = TextEditingController();
   bool isPlayed = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
   LessonDB db = LessonDB();
-  //Future _lessons;
-  Lesson _lesson = Lesson();
   DatabaseReference lessonRef;
-  int ind = 0;
+
   int score = 0;
   bool isPressed = false;
   bool isSelected = false;
   bool isCorrected = false;
+  bool isSummited = false;
   Icon icon;
+  List<Lesson> lessons = [];
   List<String> userAnswerList = [];
   List<String> realAnswerList = [];
+  Future _lessons;
+  Future<List<Lesson>> getData() async {
+    return db.fetchLessonDB();
+  }
+
+  checkAnswer(int i) {
+    userAnswerList.insert(i, "(${userAnswerTypes[i].text})");
+    realAnswerList.add(lessons[i].answer.keys.toString());
+    setState(() {
+      isSummited = true;
+      realAnswerList[i] = lessons[i].answer.keys.toString();
+    });
+
+    //
+    print(i);
+    if (userAnswerList.isEmpty) {
+      score += 0;
+      return false;
+    } else {
+      if (userAnswerList[i].toString().toLowerCase() ==
+          lessons[i].answer.keys.toString()) {
+        score += 1;
+        return true;
+      } else {
+        score += 0;
+        return false;
+      }
+    }
+  }
+
   void startOver() {
     setState(() {
-      ind = 0;
       score = 0;
-      isPressed = false;
-      isSelected = false;
+      userAnswerTypes.clear();
+      isSummited = false;
     });
     Navigator.pop(context);
   }
 
   void nextQuestion(int questionLength) {
-    if (ind == questionLength - 1) {
-      showDialog(
-        context: context,
-        barrierDismissible:
-            false, // disable dismiss function on clicking outside of box
-        builder: (ctx) => ResultBox(
-          result: score,
-          questionLength: questionLength,
-          press: startOver,
-        ),
-      );
-    } else {
-      if (isPressed) {
-        setState(
-          () {
-            ind++;
-            isPressed = false;
-            isSelected = false;
-          },
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select any option'),
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.symmetric(vertical: 20),
-          ),
-        );
-      }
-    }
-  }
-
-  void checkAnswerAndUpdate(bool value) {
-    if (isSelected) {
-      return;
-    } else {
-      if (value) {
-        score++;
-      }
-      setState(
-        () {
-          isPressed = true;
-          isSelected = true;
-        },
-      );
-    }
+    showDialog(
+      context: context,
+      barrierDismissible:
+          false, // disable dismiss function on clicking outside of box
+      builder: (ctx) => ResultBox(
+        result: score,
+        questionLength: questionLength,
+        resetPress: startOver,
+        checkAnswerPress: () {},
+        nextExercisePress: () {},
+      ),
+    );
   }
 
   @override
@@ -117,13 +110,15 @@ class _BodyState extends State<Body> {
         position = newPosition;
       });
     });
-    lessonRef = FirebaseDatabase.instance.reference().child('lesson').child('');
+    _lessons = getData();
     super.initState();
   }
 
   @override
   void dispose() {
-    userAnswerType[ind].dispose();
+    for (TextEditingController userAnswerType in userAnswerTypes) {
+      userAnswerType.dispose();
+    }
     super.dispose();
   }
 
@@ -136,7 +131,6 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    var lessons = <Lesson>[];
     return SingleChildScrollView(
       child: Stack(
         children: <Widget>[
@@ -260,66 +254,74 @@ class _BodyState extends State<Body> {
                       ),
                     ),
                   ),
-                  StreamBuilder(
-                    stream: lessonRef != null ? lessonRef.onValue : null,
+                  FutureBuilder(
+                    future: _lessons as Future<List<Lesson>>,
                     builder: (context, snapshot) {
-                      if (snapshot.hasData && !snapshot.hasError) {
-                        var event = snapshot.data as DatabaseEvent;
-                        var snapshot2 = event.snapshot.value;
-                        if (snapshot2 == null) {
-                          return const Center(
-                            child: Text('No Tasks Added Yet'),
+                      if (snapshot.connectionState == ConnectionState.done ||
+                          snapshot.connectionState == ConnectionState.active) {
+                        if (snapshot.hasData) {
+                          var extractedData = snapshot.data as List<Lesson>;
+                          for (var i in extractedData) {
+                            lessons.add(i);
+                          }
+                          //print(lessons.length);
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: ListView.builder(
+                              itemCount: extractedData.length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                //userAnswerType.add(TextEditingController());
+                                userAnswerTypes.add(TextEditingController());
+                                realAnswerList.add(extractedData[index]
+                                    .answer
+                                    .keys
+                                    .toString());
+                                return Column(
+                                  children: [
+                                    Text(
+                                      extractedData[index].title,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        height: 1.5,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    QuestionList(
+                                      index: index,
+                                      question: extractedData[index].question,
+                                    ),
+                                    AnswerList(
+                                      controller: userAnswerTypes[index],
+                                    ),
+                                    // isSummited == false
+                                    //     ? Text("")
+                                    //     : Text(
+                                    //         extractedData[index]
+                                    //             .answer
+                                    //             .keys
+                                    //             .toString(),
+                                    //         style: TextStyle(
+                                    //             color: userAnswerList[index]
+                                    //                         .toString()
+                                    //                         .toLowerCase() ==
+                                    //                     lessons[index]
+                                    //                         .answer
+                                    //                         .keys
+                                    //                         .toString()
+                                    //                 ? kCorrectAnswerColor
+                                    //                 : kIncorrectAnswerColor),
+                                    //       ),
+                                  ],
+                                );
+                              },
+                            ),
                           );
                         }
-                        Map<String, dynamic> map =
-                            Map<String, dynamic>.from(snapshot2);
-
-                        for (var taskMap in map.values) {
-                          Lesson lessonModel = Lesson.fromMap(
-                              Map<String, dynamic>.from(taskMap));
-
-                          lessons.add(lessonModel);
-                        }
-                        return SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          child: ListView.builder(
-                            itemCount: lessons.length,
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              userAnswerType.add(TextEditingController());
-                              Lesson lesson = lessons[index];
-                              return Column(
-                                children: [
-                                  Text(
-                                    lesson.title,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      height: 1.5,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  QuestionList(
-                                    index: index,
-                                    question: lesson.question,
-                                  ),
-                                  TextField(
-                                    controller: userAnswerType[index],
-                                    decoration: const InputDecoration(
-                                        hintText: 'Input your answer'),
-                                    onChanged: (value) {
-                                      value = userAnswerType[index].text;
-                                    },
-                                  ),
-                                  Text(realAnswerList[index])
-                                ],
-                              );
-                            },
-                          ),
-                        );
                       } else {
                         return SafeArea(
                           child: Center(
@@ -328,9 +330,6 @@ class _BodyState extends State<Body> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: const [
                                 CircularProgressIndicator(),
-                                // SizedBox(
-                                //   height: 20.0,
-                                // ),
                                 Text(
                                   "Please Wait while Questions are loading..",
                                   textAlign: TextAlign.center,
@@ -345,39 +344,20 @@ class _BodyState extends State<Body> {
                           ),
                         );
                       }
+                      return Text("No data");
                     },
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   GestureDetector(
-                    child: NextButton(),
+                    child: const NextButton(),
                     onTap: () {
-                      for (int i = 0; i < lessons.length; i++) {
-                        userAnswerList.insert(i, "(${userAnswerType[i].text})");
-                        print(userAnswerList);
-                        print("Answer Key: ${lessons[i].answer.keys}");
-                        print("User Answer: ${userAnswerType[i].text}");
-                        if (userAnswerList.isEmpty) {
-                          print("null list");
-                          //return Text("null list");
-                        } else {
-                          if (userAnswerList[i].toLowerCase().toString() ==
-                              lessons[i].answer.keys.toString()) {
-                            print("Results: true");
-                            //return Text("true");
-                          } else {
-                            print("Results: false");
-                            //return Text("false");
-                            realAnswerList
-                                .add(lessons[i].answer.keys.toString());
-                            print("AnswerKey List: $realAnswerList");
-                            // setState(() {
-                            //   answerKey[i] = lessons[i].answer.keys.toString();
-                            // });
-                          }
-                        }
+                      int i;
+                      for (i = 0; i < lessons.toSet().toList().length; i++) {
+                        checkAnswer(i);
                       }
+                      nextQuestion(i);
                     },
                   ),
                   const SizedBox(

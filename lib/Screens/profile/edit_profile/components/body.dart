@@ -162,6 +162,7 @@ class _BodyState extends State<Body> {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 10),
                         child: StreamBuilder<Users>(
+                          initialData: users,
                           stream: DatabaseService(uid: user.uid).userData,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {

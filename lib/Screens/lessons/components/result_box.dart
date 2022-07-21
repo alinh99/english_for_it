@@ -4,13 +4,17 @@ import 'package:flutter_eft/constants.dart';
 class ResultBox extends StatelessWidget {
   const ResultBox(
       {Key key,
-      @required this.result = 0,
-      @required this.questionLength = 0,
-      @required this.press})
+      @required this.result,
+      @required this.questionLength,
+      @required this.resetPress,
+      @required this.checkAnswerPress,
+      @required this.nextExercisePress})
       : super(key: key);
   final int result;
   final int questionLength;
-  final VoidCallback press;
+  final VoidCallback resetPress;
+  final VoidCallback checkAnswerPress;
+  final VoidCallback nextExercisePress;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -54,16 +58,40 @@ class ResultBox extends StatelessWidget {
             ),
             const SizedBox(height: 25.0),
             GestureDetector(
-              onTap: press,
+              onTap: checkAnswerPress,
+              child: Text(
+                "Check Answer",
+                style: TextStyle(
+                  color: Colors.red[900],
+                  fontSize: 15.0,
+                  letterSpacing: 1.0,
+                ),
+              ),
+            ),
+            const SizedBox(height: 10.0),
+            GestureDetector(
+              onTap: resetPress,
               child: Text(
                 "Start Over",
                 style: TextStyle(
                   color: Colors.red[900],
-                  fontSize: 20.0,
+                  fontSize: 15.0,
                   letterSpacing: 1.0,
                 ),
               ),
-            )
+            ),
+            const SizedBox(height: 10.0),
+            GestureDetector(
+              onTap: nextExercisePress,
+              child: Text(
+                "Next Exercise",
+                style: TextStyle(
+                  color: Colors.red[900],
+                  fontSize: 15.0,
+                  letterSpacing: 1.0,
+                ),
+              ),
+            ),
           ],
         ),
       ),

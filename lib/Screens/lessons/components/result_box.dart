@@ -68,7 +68,7 @@ class ResultBox extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 10.0),
+            const SizedBox(height: 12.0),
             GestureDetector(
               onTap: resetPress,
               child: Text(
@@ -80,7 +80,7 @@ class ResultBox extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 10.0),
+            const SizedBox(height: 12.0),
             GestureDetector(
               onTap: nextExercisePress,
               child: Text(

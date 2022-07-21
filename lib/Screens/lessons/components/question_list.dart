@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
 class QuestionList extends StatelessWidget {
-  // const QuestionList({
-  //   Key key,
-  //   this.index,
-  //   this.question
-  // }) : super(key: key);
   const QuestionList({Key key, this.index, this.question}) : super(key: key);
   final int index;
   final String question;

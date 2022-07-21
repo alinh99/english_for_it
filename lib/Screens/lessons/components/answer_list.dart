@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_eft/constants.dart';
 
 class AnswerList extends StatelessWidget {
   const AnswerList({

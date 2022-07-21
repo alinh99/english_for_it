@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eft/Screens/lessons/components/answer_list.dart';
+import 'package:flutter_eft/Screens/lessons/components/check_answer_box.dart';
 import 'package:flutter_eft/Screens/lessons/components/result_box.dart';
 import 'package:flutter_eft/Screens/lessons/models/lesson.dart';
 import 'package:flutter_eft/Screens/lessons/models/lesson_db.dart';
@@ -85,8 +86,19 @@ class _BodyState extends State<Body> {
         result: score,
         questionLength: questionLength,
         resetPress: startOver,
-        checkAnswerPress: () {},
+        checkAnswerPress: () {
+          answerKey(questionLength);
+        },
         nextExercisePress: () {},
+      ),
+    );
+  }
+
+  void answerKey(int i) {
+    showDialog(
+      context: context,
+      builder: (ctx) => CheckAnswerBox(
+        lessonList: lessons.toSet().toList(),
       ),
     );
   }

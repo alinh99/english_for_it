@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_eft/Screens/lessons/components/answer_list.dart';
-import 'package:flutter_eft/Screens/lessons/components/check_answer_box.dart';
-import 'package:flutter_eft/Screens/lessons/components/result_box.dart';
-import 'package:flutter_eft/Screens/lessons/models/lesson.dart';
-import 'package:flutter_eft/Screens/lessons/models/lesson_db.dart';
-import 'package:flutter_eft/Screens/lessons/components/submit_button.dart';
+import 'package:flutter_eft/Screens/lessons/listening/components/answer_list.dart';
+import 'package:flutter_eft/Screens/lessons/listening/components/check_answer_box.dart';
+import 'package:flutter_eft/Screens/lessons/listening/components/result_box.dart';
+import 'package:flutter_eft/Screens/lessons/listening/components/submit_button.dart';
+import 'package:flutter_eft/Screens/lessons/listening/models/lesson.dart';
+import 'package:flutter_eft/Screens/lessons/listening/models/lesson_db.dart';
 import 'package:flutter_eft/colors.dart';
-import 'package:flutter_eft/Screens/lessons/components/question_list.dart';
+import 'package:flutter_eft/Screens/lessons//listening/components/question_list.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_eft/constants.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,13 +22,11 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   AudioPlayer audioPlayer = AudioPlayer();
   List<TextEditingController> userAnswerTypes = [];
-  //TextEditingController answerController = TextEditingController();
   bool isPlayed = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
   LessonDB db = LessonDB();
   DatabaseReference lessonRef;
-
   int score = 0;
   bool isPressed = false;
   bool isSelected = false;
@@ -39,6 +37,7 @@ class _BodyState extends State<Body> {
   List<String> userAnswerList = [];
   List<String> realAnswerList = [];
   Future _lessons;
+  
   Future<List<Lesson>> getData() async {
     return db.fetchLessonDB();
   }

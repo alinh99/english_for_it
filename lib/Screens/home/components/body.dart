@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eft/Screens/home_details/listening/listening_screen.dart';
+import 'package:flutter_eft/Screens/home_details/reading/reading_screen.dart';
+import 'package:flutter_eft/Screens/home_details/speaking/speaking_screen.dart';
+import 'package:flutter_eft/Screens/home_details/writing/writing_screen.dart';
+import 'package:flutter_eft/Screens/lessons/listening/lesson_listening_screen.dart';
 import 'package:flutter_eft/colors.dart';
-import 'package:flutter_eft/Screens/home_details/home_details.dart';
-import 'package:flutter_eft/constants.dart';
 import 'package:flutter_eft/Screens/home/components/style.dart';
 import 'package:flutter_eft/Screens/home/components/long_course_card.dart';
 
@@ -118,9 +121,9 @@ class _BodyState extends State<Body> {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       settings: const RouteSettings(
-                                          name: '/details_screen'),
+                                          name: '/listening_screen'),
                                       builder: (BuildContext context) {
-                                        return const DetailsScreen();
+                                        return const ListeningScreen();
                                       },
                                     ),
                                   );
@@ -138,9 +141,9 @@ class _BodyState extends State<Body> {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       settings: const RouteSettings(
-                                          name: '/details_screen'),
+                                          name: '/writing_screen'),
                                       builder: (BuildContext context) {
-                                        return const DetailsScreen();
+                                        return const WritingScreen();
                                       },
                                     ),
                                   );
@@ -165,9 +168,9 @@ class _BodyState extends State<Body> {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       settings: const RouteSettings(
-                                          name: '/details_screen'),
+                                          name: '/reading_screen'),
                                       builder: (BuildContext context) {
-                                        return const DetailsScreen();
+                                        return const ReadingScreen();
                                       },
                                     ),
                                   );
@@ -185,9 +188,9 @@ class _BodyState extends State<Body> {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       settings: const RouteSettings(
-                                          name: '/details_screen'),
+                                          name: '/speaking_screen'),
                                       builder: (BuildContext context) {
-                                        return const DetailsScreen();
+                                        return const SpeakingScreen();
                                       },
                                     ),
                                   );

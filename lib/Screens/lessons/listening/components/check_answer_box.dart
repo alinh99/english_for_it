@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_eft/Screens/lessons/models/lesson.dart';
-import 'package:flutter_eft/Screens/lessons/models/lesson_db.dart';
+import 'package:flutter_eft/Screens/lessons/listening/models/lesson.dart';
+
 import 'package:flutter_eft/constants.dart';
 
 class CheckAnswerBox extends StatelessWidget {

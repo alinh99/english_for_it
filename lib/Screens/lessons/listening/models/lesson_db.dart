@@ -1,4 +1,5 @@
-import 'package:flutter_eft/Screens/lessons/models/lesson.dart';
+
+import 'package:flutter_eft/Screens/lessons/listening/models/lesson.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

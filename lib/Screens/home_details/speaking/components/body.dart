@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_eft/colors.dart';
 import 'package:flutter_eft/Screens/home/components/style.dart';
 import 'package:flutter_eft/Components/seassion_card.dart';
-import 'package:flutter_eft/Screens/lessons/lesson_screen.dart';
+
 class Body extends StatefulWidget {
   const Body({Key key}) : super(key: key);
 
@@ -85,13 +85,7 @@ class _BodyState extends State<Body> {
                                   children: <Widget>[
                                     SeassionCard(
                                       seassionNum: 1,
-                                      press: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return const Lesson();
-                                        }));
-                                      },
+                                      press: () {},
                                     ),
                                     SeassionCard(
                                       seassionNum: 2,
